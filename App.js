@@ -1,7 +1,11 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
+import { createStackNavigator, createAppContainer } from 'react-navigation';
+import Home from './app/screens/Home';
+import Feed from './app/screens/Feed';
+//import Routes from './app/routing/routes';
 
-export default class App extends React.Component {
+class App extends React.Component {
   render() {
     return (
       <View style={styles.container}>
@@ -11,11 +15,13 @@ export default class App extends React.Component {
   }
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+const AppNavigator = createStackNavigator({
+  'Home': {
+    screen: Home
+  },
+  'Feed': {
+      screen: Feed
   },
 });
+
+export default createAppContainer(AppNavigator);
