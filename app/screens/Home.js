@@ -85,20 +85,16 @@ class Home extends Component {
             <View style={styles.container}>
 
                 <MapView
-                    initialRegion={
-                        {
-                            latitude: 33.4242,
-                            longitude: -111.9281,
-                            latitudeDelta: 0.05,
-                            longitudeDelta: 0.02,
-                        }
-                    }
                     style={
                         {
                             height: '90%',
                             width: '100%',
                         }
-                    }>
+                    }
+                    followsUserLocation={true}
+                    showsUserLocation={true}
+                    loadingEnabled={true}    
+                >
                     {this.state.markers.map(marker => (
                         <MapView.Marker
                             key={marker._key}
