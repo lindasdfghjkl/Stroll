@@ -5,6 +5,7 @@ import Home from './app/screens/Home';
 import Feed from './app/screens/Feed';
 //import Routes from './app/routing/routes';
 
+
 class App extends React.Component {
   render() {
     return (
@@ -22,6 +23,12 @@ const AppNavigator = createStackNavigator({
   'Feed': {
       screen: Feed
   },
+},
+{
+  headerMode: 'none',
+  navigationOptions: {
+      headerVisible: false,
+  }
 });
 
 export default createAppContainer(AppNavigator);
