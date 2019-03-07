@@ -6,6 +6,7 @@ const styles = require('../../styles.js')
 const constants = styles.constants;
 const { StyleSheet, Text, View, TouchableHighlight} = ReactNative;
 
+/* Not currently in use anymore, see Toolbar instead */
 class ActionButton extends Component {
   render() {
     return (

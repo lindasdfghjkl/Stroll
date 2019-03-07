@@ -30,13 +30,15 @@ var styles = StyleSheet.create({
   },
   navbar: {
     alignItems: 'center',
-    backgroundColor: '#fff',
+    backgroundColor: '#1EC142',
     borderBottomColor: '#eee',
     borderColor: 'transparent',
     borderWidth: 1,
     justifyContent: 'center',
-    height: 44,
-    flexDirection: 'row'
+    height: '40%',
+    flexDirection: 'row',
+    borderTopLeftRadius: 10,
+    borderTopRightRadius: 10,
   },
   navbarTitle: {
     color: '#444',

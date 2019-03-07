@@ -12,6 +12,7 @@ const firebase = require('firebase');
 const StatusBar = require('../components/StatusBar');
 const ActionButton = require('../components/ActionButton');
 const ListItem = require('../components/ListItem');
+const Toolbar = require('../components/Toolbar');
 const styles = require('../../styles.js');
 
 import userMarker from '../../assets/userMarker.png';
@@ -87,7 +88,7 @@ class Home extends Component {
                 <MapView
                     style={
                         {
-                            height: '90%',
+                            height: '85%',
                             width: '100%',
                         }
                     }
@@ -105,9 +106,7 @@ class Home extends Component {
                     ))}
                 </MapView>
 
-
-                <ActionButton onPress={this._addItem.bind(this)} title="New Pin" />
-
+                <Toolbar onPress={this._addItem.bind(this)}/>
             </View>
         )
     }
