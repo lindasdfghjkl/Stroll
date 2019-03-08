@@ -106,7 +106,7 @@ class Home extends Component {
                     ))}
                 </MapView>
 
-                <Toolbar onPress={this._addItem.bind(this)}/>
+                <Toolbar onPress={this._addItem.bind(this)} items={this.itemsRef}/>
             </View>
         )
     }

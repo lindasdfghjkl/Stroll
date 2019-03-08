@@ -19,32 +19,34 @@ import toolbarStyle from '../styles/toolbarStyle';
 import addPinModalStyle from '../styles/addPinModalStyle';
 
 import Feed from '../../app/screens/Feed';
-//const { StyleSheet, Text, View} = ReactNative;
+
 
 class Toolbar extends Component {
   constructor(props) {
     super(props);
+
     this.state = { 
       modalVisible: false,
-      text: '', 
+      textValue: '', 
     };
+
+    this.itemsRef = this.props.items;
   }
-  // state = {
-  //   modalVisible: false,
-  // };
+  
 
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
 
   setTextEmpty() {
-    this.setState({text: ''});
+    this.setState({textValue: ''});
   }
 
   closeModal() {
     this.setModalVisible(!this.state.modalVisible);
     this.setTextEmpty();
   }
+
 
 
   render() {
@@ -74,15 +76,28 @@ class Toolbar extends Component {
               <TextInput
                 style={addPinModalStyle.noteInput}
                 placeholder={'Enter note here'}
-                onChangeText={(text) => this.setState({text})}
+                onChangeText={(text) => this.setState({textValue: text})}
                 onSubmitEditing={Keyboard.dismiss}
-                value={this.state.text}
+                value={this.state.textValue}
                 multiline={true}
               />
               <Button
                   color="white"
                   title="Post"
                   buttonStyle={addPinModalStyle.postButton}
+                  onPress={() => {
+                    var coordinates = {};
+                      navigator.geolocation.getCurrentPosition(
+                        (position) => {
+                          coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
+                          console.log(coordinates);
+                          this.itemsRef.push({ message: this.state.textValue, location: coordinates });
+                        },
+                        (error) => this.setState({ error: error.message }),
+                        { enableHighAccuracy: true, timeout: 20000 },
+                      )
+                    this.closeModal();  
+                  }}
               />
             </KeyboardAvoidingView>
           </KeyboardAvoidingView>
