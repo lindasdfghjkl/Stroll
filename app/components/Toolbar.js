@@ -38,13 +38,27 @@ class Toolbar extends Component {
     this.setState({modalVisible: visible});
   }
 
-  setTextEmpty() {
-    this.setState({textValue: ''});
-  }
-
   closeModal() {
     this.setModalVisible(!this.state.modalVisible);
-    this.setTextEmpty();
+  }
+
+  openModal(){
+    // Reset the text box to empty, and when that is done open the modal
+    this.setState({textValue: ''}, () => this.setModalVisible(true));
+  }
+
+  sendNoteToDB() {
+    var coordinates = {};
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
+        console.log(coordinates);
+        this.itemsRef.push({ message: this.state.textValue, location: coordinates });
+      },
+      (error) => this.setState({ error: error.message }),
+      { enableHighAccuracy: true, timeout: 20000 },
+    )
+    this.closeModal();
   }
 
 
@@ -77,6 +91,11 @@ class Toolbar extends Component {
                 style={addPinModalStyle.noteInput}
                 placeholder={'Enter note here'}
                 onChangeText={(text) => this.setState({textValue: text})}
+                onEndEditing={(e) =>
+                  {
+                    this.setState({textValue: e.nativeEvent.text})
+                  }
+                }
                 onSubmitEditing={Keyboard.dismiss}
                 value={this.state.textValue}
                 multiline={true}
@@ -85,19 +104,7 @@ class Toolbar extends Component {
                   color="white"
                   title="Post"
                   buttonStyle={addPinModalStyle.postButton}
-                  onPress={() => {
-                    var coordinates = {};
-                      navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                          coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
-                          console.log(coordinates);
-                          this.itemsRef.push({ message: this.state.textValue, location: coordinates });
-                        },
-                        (error) => this.setState({ error: error.message }),
-                        { enableHighAccuracy: true, timeout: 20000 },
-                      )
-                    this.closeModal();  
-                  }}
+                  onPress={() => {this.sendNoteToDB()}}
               />
             </KeyboardAvoidingView>
           </KeyboardAvoidingView>
@@ -107,7 +114,7 @@ class Toolbar extends Component {
         <View style={toolbarStyle.navbar}>
           <Ionicons name="ios-list" size={50} color="white"/>
           <Ionicons name="ios-add-circle" size={50} color="white" onPress={() => {
-            this.setModalVisible(true);
+            this.openModal();
           }}/>
         </View>
       </View>
