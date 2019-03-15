@@ -80,7 +80,7 @@ class Toolbar extends Component {
                 <Text style={addPinModalStyle.modalTitle}>Add Pin</Text>
                 <Ionicons
                   name="ios-close" 
-                  size={50} color="#1EC142" 
+                  size={50} color="#4AE779" 
                   style={addPinModalStyle.closeIcon}
                   onPress={() => {
                     this.closeModal();

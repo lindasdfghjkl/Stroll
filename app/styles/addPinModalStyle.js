@@ -30,13 +30,13 @@ export default {
       },
       noteInput: {
           height: '60%',
-          borderColor: '#1EC142',
+          borderColor: '#4AE779',
           borderWidth: 2,
           borderRadius: 10,
           padding: '3%'
       },
       postButton: {
-          backgroundColor: '#1EC142',
+          backgroundColor: '#4AE779',
          // padding: '5%',
           borderRadius: 10,
           marginTop: 15
