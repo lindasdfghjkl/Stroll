@@ -26,7 +26,7 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.dc.stroll",
       "config": {
-        "googleMapsApiKey": "AIzaSyDA2VJGzAsZGasI0SOOaYWVnySxCqF637A"
+        "googleMapsApiKey": "process.env.REACT_APP_API_KEY"
       }
     }
   }
