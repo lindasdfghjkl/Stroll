@@ -43,14 +43,38 @@ const firebaseConfig = {
 };
 const firebaseApp = firebase.initializeApp(firebaseConfig);
 
+const LATITUDE_DELTA = 0.01;
+const LONGITUDE_DELTA = 0.01;
+
+const initialRegion = {
+  latitude: -37.78825,
+  longitude: -122.4324,
+  latitudeDelta: 0.0922,
+  longitudeDelta: 0.0421,
+}
+
 class Home extends Component {
+    map = null;
 
     constructor(props) {
         super(props);
         this.state = {
-            markers: []
+            markers: [],
+            region: {
+                latitude: -37.78825,
+                longitude: -122.4324,
+                latitudeDelta: 0.0922,
+                longitudeDelta: 0.0421,
+            },
+            ready: true,
         };
         this.itemsRef = this.getRef().child('items');
+    }
+
+    setRegion(region) {
+        if(this.state.ready) {
+          setTimeout(() => this.map.animateToRegion(region), 10);
+        }
     }
 
     getRef() {
@@ -78,14 +102,54 @@ class Home extends Component {
     }
 
     componentDidMount() {
+        this.getCurrentPosition();
         this.listenForItems(this.itemsRef);
     }
 
+    getCurrentPosition() {
+        try {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const region = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+              };
+              this.setRegion(region);
+            },
+            (error) => {
+              Alert.alert("Error Loading Map");
+            }
+          );
+        } catch(e) {
+          alert(e.message || "");
+        }
+      };
+    
+      onMapReady = (e) => {
+        if(!this.state.ready) {
+          this.setState({ready: true});
+        }
+      };
+    
+    //   onRegionChange = (region) => {
+    //     console.log('onRegionChange', region);
+    //   };
+    
+    //   onRegionChangeComplete = (region) => {
+    //     console.log('onRegionChangeComplete', region);
+    //   };
+
     render() {
+        const { region } = this.state;
+        const { children, renderMarker, markers } = this.props;
         return (
             <View style={styles.container}>
 
                 <MapView
+                    provider="google"
+                    ref={ map => { this.map = map }}
                     style={
                         {
                             height: '85%',
@@ -94,7 +158,12 @@ class Home extends Component {
                     }
                     followsUserLocation={true}
                     showsUserLocation={true}
-                    loadingEnabled={true}    
+                    loadingEnabled={true}
+                    renderMarker={renderMarker}
+                    onMapReady={this.onMapReady}
+                    showsMyLocationButton={false}
+                    //onRegionChange={this.onRegionChange}
+                    //onRegionChangeComplete={this.onRegionChangeComplete}   
                 >
                     {this.state.markers.map(marker => (
                         <MapView.Marker
@@ -106,37 +175,10 @@ class Home extends Component {
                     ))}
                 </MapView>
 
-                <Toolbar onPress={this._addItem.bind(this)} items={this.itemsRef}/>
+                <Toolbar items={this.itemsRef}/>
             </View>
         )
     }
-
-    _addItem() {
-        AlertIOS.prompt(
-            'Add New Pin',
-            null,
-            [
-                { text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel' },
-                {
-                    text: 'Post',
-                    onPress: (text) => {
-                        var coordinates = {};
-                        navigator.geolocation.getCurrentPosition(
-                            (position) => {
-                                coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
-                                console.log(coordinates);
-
-                                this.itemsRef.push({ message: text, location: coordinates });
-                            },
-                            (error) => this.setState({ error: error.message }),
-                            { enableHighAccuracy: true, timeout: 20000 },
-                        )
-                    }
-                },
-            ],
-            'plain-text'
-        );
-    }
 }
 export default Home;
-//AppRegistry.registerComponent('FirebaseReactNativeSample', () => FirebaseReactNativeSample);
+
