@@ -10,7 +10,7 @@ export default {
       modal: {
         width: '90%',
         height: '50%',
-        backgroundColor: 'white',
+        backgroundColor: '#2E2E2E',
         paddingLeft: '6%',
         paddingRight: '6%',
         paddingBottom: '6%',
@@ -23,6 +23,7 @@ export default {
       },
       modalTitle: {      
         fontSize: 24,
+        color: 'white',
         paddingTop: '3%'
       },
       closeIcon: {
@@ -31,15 +32,13 @@ export default {
       noteInput: {
           height: '60%',
           borderColor: '#4AE779',
+          color: 'white',
           borderWidth: 2,
           borderRadius: 10,
-          padding: '3%'
+          padding: '3%',
+          marginBottom: '5%'
       },
-      postButton: {
-          backgroundColor: '#4AE779',
-         // padding: '5%',
-          borderRadius: 10,
-          marginTop: 15
-
+      postIcon: {
+        alignSelf: "flex-end"
       }
 }
