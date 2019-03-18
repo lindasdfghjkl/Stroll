@@ -17,8 +17,7 @@ import { createStackNavigator, createAppContainer } from 'react-navigation';
 // Styles
 import toolbarStyle from '../styles/toolbarStyle';
 import addPinModalStyle from '../styles/addPinModalStyle';
-
-import Feed from '../../app/screens/Feed';
+import feedModalStyle from '../styles/feedModalStyle';
 
 
 class Toolbar extends Component {
@@ -26,7 +25,8 @@ class Toolbar extends Component {
     super(props);
 
     this.state = { 
-      modalVisible: false,
+      addPinModalVisible: false,
+      feedModalVisible: false,
       textValue: '', 
     };
 
@@ -34,17 +34,25 @@ class Toolbar extends Component {
   }
   
 
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+  setAddPinModalVisible(visible) {
+    this.setState({addPinModalVisible: visible});
   }
 
-  closeModal() {
-    this.setModalVisible(!this.state.modalVisible);
+  setFeedModalVisible(visible) {
+    this.setState({feedModalVisible: visible});
   }
 
-  openModal(){
+  closeAddPinModal() {
+    this.setAddPinModalVisible(!this.state.addPinModalVisible);
+  }
+
+  openAddPinModal(){
     // Reset the text box to empty, and when that is done open the modal
-    this.setState({textValue: ''}, () => this.setModalVisible(true));
+    this.setState({textValue: ''}, () => this.setAddPinModalVisible(true));
+  }
+
+  openFeedModal(){
+    this.setFeedModalVisible(true);
   }
 
   sendNoteToDB() {
@@ -58,7 +66,7 @@ class Toolbar extends Component {
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: true, timeout: 20000 },
     )
-    this.closeModal();
+    this.closeAddPinModal();
   }
 
 
@@ -70,7 +78,7 @@ class Toolbar extends Component {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={this.state.modalVisible}
+          visible={this.state.addPinModalVisible}
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
           }}>
@@ -83,7 +91,7 @@ class Toolbar extends Component {
                   size={50} color="#4AE779" 
                   style={addPinModalStyle.closeIcon}
                   onPress={() => {
-                    this.closeModal();
+                    this.closeAddPinModal();
                   }}
                 />
               </View>
@@ -113,11 +121,32 @@ class Toolbar extends Component {
           </KeyboardAvoidingView>
         </Modal>
 
+        
+
+        {/* Feed Modal */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.feedModalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}
+        >
+          <View style={feedModalStyle.modalContent}>
+            <View style={feedModalStyle.modal}>
+                  <Text> Test </Text>
+            </View>
+          </View>
+        </Modal>
+
+
         {/* Main Toolbar with two icons */}
         <View style={toolbarStyle.navbar}>
-          <Ionicons name="ios-list" size={50} color="#4AE779"/>
+          <Ionicons name="ios-list" size={50} color="#4AE779" onPress={() => {
+            this.openFeedModal();
+          }}/>
           <Ionicons name="ios-add-circle-outline" size={50} color="#4AE779" onPress={() => {
-            this.openModal();
+            this.openAddPinModal();
           }}/>
         </View>
       </View>
