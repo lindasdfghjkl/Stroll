@@ -90,6 +90,7 @@ class Toolbar extends Component {
               <TextInput
                 style={addPinModalStyle.noteInput}
                 placeholder={'Enter note here'}
+                placeholderTextColor='white'
                 onChangeText={(text) => this.setState({textValue: text})}
                 onEndEditing={(e) =>
                   {
@@ -99,12 +100,14 @@ class Toolbar extends Component {
                 onSubmitEditing={Keyboard.dismiss}
                 value={this.state.textValue}
                 multiline={true}
+                keyboardAppearance={'dark'}
               />
-              <Button
-                  color="white"
-                  title="Post"
-                  buttonStyle={addPinModalStyle.postButton}
-                  onPress={() => {this.sendNoteToDB()}}
+              <Ionicons 
+                name="ios-paper-plane" 
+                size={35} 
+                color="#4AE779" 
+                onPress={() => {this.sendNoteToDB()}}
+                style={addPinModalStyle.postIcon}
               />
             </KeyboardAvoidingView>
           </KeyboardAvoidingView>
@@ -112,8 +115,8 @@ class Toolbar extends Component {
 
         {/* Main Toolbar with two icons */}
         <View style={toolbarStyle.navbar}>
-          <Ionicons name="ios-list" size={50} color="white"/>
-          <Ionicons name="ios-add-circle" size={50} color="white" onPress={() => {
+          <Ionicons name="ios-list" size={50} color="#4AE779"/>
+          <Ionicons name="ios-add-circle-outline" size={50} color="#4AE779" onPress={() => {
             this.openModal();
           }}/>
         </View>

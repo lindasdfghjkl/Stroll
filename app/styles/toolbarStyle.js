@@ -2,7 +2,7 @@
 export default {
     navbar: {
         alignItems: 'center',
-        backgroundColor: '#4AE779',
+        backgroundColor: '#2E2E2E',
         borderColor: 'transparent',
         borderWidth: 1,
         justifyContent: 'space-between',
