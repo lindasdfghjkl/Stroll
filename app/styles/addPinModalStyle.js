@@ -24,7 +24,8 @@ export default {
       modalTitle: {      
         fontSize: 24,
         color: 'white',
-        paddingTop: '3%'
+        paddingTop: '3%',
+        paddingBottom: '3%'
       },
       closeIcon: {
         marginLeft: 'auto'
