@@ -10,7 +10,7 @@ export default {
       modal: {
         width: '90%',
         height: '50%',
-        backgroundColor: '#2E2E2E',
+        backgroundColor: '#212121',
         paddingLeft: '6%',
         paddingRight: '6%',
         paddingBottom: '6%',

@@ -12,13 +12,12 @@ import {
   } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
 
 // Styles
 import toolbarStyle from '../styles/toolbarStyle';
 import addPinModalStyle from '../styles/addPinModalStyle';
-
-import Feed from '../../app/screens/Feed';
+import feedModalStyle from '../styles/feedModalStyle';
 
 
 class Toolbar extends Component {
@@ -26,7 +25,8 @@ class Toolbar extends Component {
     super(props);
 
     this.state = { 
-      modalVisible: false,
+      addPinModalVisible: false,
+      feedModalVisible: false,
       textValue: '', 
     };
 
@@ -34,17 +34,29 @@ class Toolbar extends Component {
   }
   
 
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
+  setAddPinModalVisible(visible) {
+    this.setState({addPinModalVisible: visible});
   }
 
-  closeModal() {
-    this.setModalVisible(!this.state.modalVisible);
+  setFeedModalVisible(visible) {
+    this.setState({feedModalVisible: visible});
   }
 
-  openModal(){
+  closeAddPinModal() {
+    this.setAddPinModalVisible(!this.state.addPinModalVisible);
+  }
+
+  closeFeedModal() {
+    this.setFeedModalVisible(!this.state.feedModalVisible);
+  }
+
+  openAddPinModal(){
     // Reset the text box to empty, and when that is done open the modal
-    this.setState({textValue: ''}, () => this.setModalVisible(true));
+    this.setState({textValue: ''}, () => this.setAddPinModalVisible(true));
+  }
+
+  openFeedModal(){
+    this.setFeedModalVisible(true);
   }
 
   sendNoteToDB() {
@@ -58,7 +70,7 @@ class Toolbar extends Component {
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: true, timeout: 20000 },
     )
-    this.closeModal();
+    this.closeAddPinModal();
   }
 
 
@@ -70,7 +82,7 @@ class Toolbar extends Component {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={this.state.modalVisible}
+          visible={this.state.addPinModalVisible}
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
           }}>
@@ -83,7 +95,7 @@ class Toolbar extends Component {
                   size={50} color="#4AE779" 
                   style={addPinModalStyle.closeIcon}
                   onPress={() => {
-                    this.closeModal();
+                    this.closeAddPinModal();
                   }}
                 />
               </View>
@@ -113,11 +125,77 @@ class Toolbar extends Component {
           </KeyboardAvoidingView>
         </Modal>
 
+        
+
+        {/* Feed Modal */}
+        {/* Hard Coded */}
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={this.state.feedModalVisible}
+          onRequestClose={() => {
+            Alert.alert('Modal has been closed.');
+          }}
+        >
+          <View style={feedModalStyle.modalContent}>
+            <View style={feedModalStyle.modal}>
+              <View>
+                  <Ionicons 
+                    name="ios-arrow-down" 
+                    color="#EFEFF4" 
+                    size={50} 
+                    onPress={() => {
+                      this.closeFeedModal();
+                    }}
+                    style={feedModalStyle.closeIcon}
+                  />
+                 
+                  <Card style={feedModalStyle.cardStyle}>
+                    <CardItem style={feedModalStyle.cardItemStyle}>
+                      <Body>
+                        <Text style={feedModalStyle.cardTextStyle}>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        </Text>
+                      </Body>
+                      <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle}/>
+                    </CardItem>
+                  </Card>
+
+                  <Card style={feedModalStyle.cardStyle}>
+                    <CardItem style={feedModalStyle.cardItemStyle}>
+                      <Body>
+                        <Text style={feedModalStyle.cardTextStyle}>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        </Text>
+                      </Body>
+                      <Ionicons name="ios-arrow-forward" color="#FF32B1" size={30} style={feedModalStyle.iconStyle}/>
+                    </CardItem>
+                  </Card>
+
+                  <Card style={feedModalStyle.cardStyle}>
+                    <CardItem style={feedModalStyle.cardItemStyle}>
+                      <Body>
+                        <Text style={feedModalStyle.cardTextStyle}>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        </Text>
+                      </Body>
+                      <Ionicons name="ios-arrow-forward" color="#4B73FF" size={30} style={feedModalStyle.iconStyle}/>
+                    </CardItem>
+                  </Card>
+                  
+                </View>
+            </View>
+          </View>
+        </Modal>
+
+
         {/* Main Toolbar with two icons */}
         <View style={toolbarStyle.navbar}>
-          <Ionicons name="ios-list" size={50} color="#4AE779"/>
+          <Ionicons name="ios-list" size={50} color="#4AE779" onPress={() => {
+            this.openFeedModal();
+          }}/>
           <Ionicons name="ios-add-circle-outline" size={50} color="#4AE779" onPress={() => {
-            this.openModal();
+            this.openAddPinModal();
           }}/>
         </View>
       </View>
