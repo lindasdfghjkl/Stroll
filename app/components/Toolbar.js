@@ -12,7 +12,7 @@ import {
   } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
-import { createStackNavigator, createAppContainer } from 'react-navigation';
+import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
 
 // Styles
 import toolbarStyle from '../styles/toolbarStyle';
@@ -44,6 +44,10 @@ class Toolbar extends Component {
 
   closeAddPinModal() {
     this.setAddPinModalVisible(!this.state.addPinModalVisible);
+  }
+
+  closeFeedModal() {
+    this.setFeedModalVisible(!this.state.feedModalVisible);
   }
 
   openAddPinModal(){
@@ -124,6 +128,7 @@ class Toolbar extends Component {
         
 
         {/* Feed Modal */}
+        {/* Hard Coded */}
         <Modal
           animationType="slide"
           transparent={true}
@@ -134,7 +139,51 @@ class Toolbar extends Component {
         >
           <View style={feedModalStyle.modalContent}>
             <View style={feedModalStyle.modal}>
-                  <Text> Test </Text>
+              <View>
+                  <Ionicons 
+                    name="ios-arrow-down" 
+                    color="#EFEFF4" 
+                    size={50} 
+                    onPress={() => {
+                      this.closeFeedModal();
+                    }}
+                    style={feedModalStyle.closeIcon}
+                  />
+                 
+                  <Card style={feedModalStyle.cardStyle}>
+                    <CardItem style={feedModalStyle.cardItemStyle}>
+                      <Body>
+                        <Text style={feedModalStyle.cardTextStyle}>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        </Text>
+                      </Body>
+                      <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle}/>
+                    </CardItem>
+                  </Card>
+
+                  <Card style={feedModalStyle.cardStyle}>
+                    <CardItem style={feedModalStyle.cardItemStyle}>
+                      <Body>
+                        <Text style={feedModalStyle.cardTextStyle}>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        </Text>
+                      </Body>
+                      <Ionicons name="ios-arrow-forward" color="#FF32B1" size={30} style={feedModalStyle.iconStyle}/>
+                    </CardItem>
+                  </Card>
+
+                  <Card style={feedModalStyle.cardStyle}>
+                    <CardItem style={feedModalStyle.cardItemStyle}>
+                      <Body>
+                        <Text style={feedModalStyle.cardTextStyle}>
+                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                        </Text>
+                      </Body>
+                      <Ionicons name="ios-arrow-forward" color="#4B73FF" size={30} style={feedModalStyle.iconStyle}/>
+                    </CardItem>
+                  </Card>
+                  
+                </View>
             </View>
           </View>
         </Modal>
