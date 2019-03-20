@@ -8,7 +8,9 @@ import {
     TouchableHighlight,
     TextInput,
     Keyboard,
-    KeyboardAvoidingView
+    KeyboardAvoidingView,
+    ScrollView,
+    Image
   } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
@@ -91,8 +93,8 @@ class Toolbar extends Component {
               <View style={addPinModalStyle.modalHeader}>
                 <Text style={addPinModalStyle.modalTitle}>Add Pin</Text>
                 <Ionicons
-                  name="ios-close" 
-                  size={50} color="#4AE779" 
+                  name="ios-close-circle-outline" 
+                  size={30} color="#8E8E93" 
                   style={addPinModalStyle.closeIcon}
                   onPress={() => {
                     this.closeAddPinModal();
@@ -150,38 +152,40 @@ class Toolbar extends Component {
                     style={feedModalStyle.closeIcon}
                   />
                  
-                  <Card style={feedModalStyle.cardStyle}>
-                    <CardItem style={feedModalStyle.cardItemStyle}>
-                      <Body>
-                        <Text style={feedModalStyle.cardTextStyle}>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </Text>
-                      </Body>
-                      <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle}/>
-                    </CardItem>
-                  </Card>
+                 <ScrollView style={{height: '100%'}}>
+                    <Card style={feedModalStyle.cardStyle}>
+                      <CardItem style={feedModalStyle.cardItemStyle}>
+                        <Body>
+                          <Text style={feedModalStyle.cardTextStyle}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                          </Text>
+                        </Body>
+                        <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle}/>
+                      </CardItem>
+                    </Card>
 
-                  <Card style={feedModalStyle.cardStyle}>
-                    <CardItem style={feedModalStyle.cardItemStyle}>
-                      <Body>
-                        <Text style={feedModalStyle.cardTextStyle}>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </Text>
-                      </Body>
-                      <Ionicons name="ios-arrow-forward" color="#FF32B1" size={30} style={feedModalStyle.iconStyle}/>
-                    </CardItem>
-                  </Card>
+                    <Card style={feedModalStyle.cardStyle}>
+                      <CardItem style={feedModalStyle.cardItemStyle}>
+                        <Body>
+                          <Text style={feedModalStyle.cardTextStyle}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                          </Text>
+                        </Body>
+                        <Ionicons name="ios-arrow-forward" color="#FF32B1" size={30} style={feedModalStyle.iconStyle}/>
+                      </CardItem>
+                    </Card>
 
-                  <Card style={feedModalStyle.cardStyle}>
-                    <CardItem style={feedModalStyle.cardItemStyle}>
-                      <Body>
-                        <Text style={feedModalStyle.cardTextStyle}>
-                          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        </Text>
-                      </Body>
-                      <Ionicons name="ios-arrow-forward" color="#4B73FF" size={30} style={feedModalStyle.iconStyle}/>
-                    </CardItem>
-                  </Card>
+                    <Card style={feedModalStyle.cardStyle}>
+                      <CardItem style={feedModalStyle.cardItemStyle}>
+                        <Body>
+                          <Text style={feedModalStyle.cardTextStyle}>
+                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                          </Text>
+                        </Body>
+                        <Ionicons name="ios-arrow-forward" color="#4B73FF" size={30} style={feedModalStyle.iconStyle}/>
+                      </CardItem>
+                    </Card>
+                  </ScrollView>
                   
                 </View>
             </View>
@@ -191,12 +195,29 @@ class Toolbar extends Component {
 
         {/* Main Toolbar with two icons */}
         <View style={toolbarStyle.navbar}>
-          <Ionicons name="ios-list" size={50} color="#4AE779" onPress={() => {
-            this.openFeedModal();
-          }}/>
-          <Ionicons name="ios-add-circle-outline" size={50} color="#4AE779" onPress={() => {
-            this.openAddPinModal();
-          }}/>
+          <TouchableHighlight
+            onPress={() => {
+              this.openFeedModal();
+            }}
+          >
+            <Image
+              source={require('../../assets/icon-assets/unselected-home.png')}
+            />
+          </TouchableHighlight>
+
+          <Image
+            source={require('../../assets/icon-assets/selected-find-my-loctaion.png')}
+          />
+
+          <TouchableHighlight
+            onPress={() => {
+              this.openAddPinModal();
+            }}
+          >
+            <Image
+              source={require('../../assets/icon-assets/unselected-add-note.png')}
+            />
+          </TouchableHighlight>
         </View>
       </View>
     );
