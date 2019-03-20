@@ -9,7 +9,8 @@ import {
     TextInput,
     Keyboard,
     KeyboardAvoidingView,
-    ScrollView
+    ScrollView,
+    Image
   } from 'react-native';
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
@@ -194,12 +195,30 @@ class Toolbar extends Component {
 
         {/* Main Toolbar with two icons */}
         <View style={toolbarStyle.navbar}>
-          <Ionicons name="ios-list" size={50} color="#4AE779" onPress={() => {
+          <TouchableHighlight
+            onPress={() => {
+              this.openFeedModal();
+            }}
+          >
+            <Image
+              source={require('../../assets/icon-assets/unselected-home.png')}
+            />
+          </TouchableHighlight>
+          {/* <Ionicons name="ios-list" size={50} color="#4AE779" onPress={() => {
             this.openFeedModal();
-          }}/>
-          <Ionicons name="ios-add-circle-outline" size={50} color="#4AE779" onPress={() => {
+          }}/> */}
+          <Image
+            source={require('../../assets/icon-assets/selected-find-my-loctaion.png')}
+          />
+          <Image
+            source={require('../../assets/icon-assets/unselected-add-note.png')}
+            onPress={() => {
+              this.openAddPinModal();
+            }}
+          />
+          {/* <Ionicons name="ios-add-circle-outline" size={50} color="#4AE779" onPress={() => {
             this.openAddPinModal();
-          }}/>
+          }}/> */}
         </View>
       </View>
     );
