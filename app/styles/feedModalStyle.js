@@ -26,6 +26,7 @@ export default {
           borderRadius: 10,
           borderColor: '#4D4D4D',
           marginBottom: '5%',
+          //height: 80
       },
       cardItemStyle: {
         backgroundColor: '#4D4D4D',
