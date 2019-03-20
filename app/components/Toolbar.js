@@ -119,7 +119,7 @@ class Toolbar extends Component {
               <TouchableHighlight onPress={() => {this.sendNoteToDB()}}>
                   <Image
                     style={addPinModalStyle.postIcon}
-                    source={require('../../assets/icon-assets/enabled-post-button-2x.png')}
+                    source={require('../../assets/icon-assets/enabled-post-button-3x.png')}
                   />
               </TouchableHighlight>
             </KeyboardAvoidingView>
@@ -241,7 +241,7 @@ class Toolbar extends Component {
 
           <Image
             style={toolbarStyle.feedIcon}
-            source={require('../../assets/icon-assets/selected-find-my-loctaion-2x.png')}
+            source={require('../../assets/icon-assets/selected-find-my-loctaion-3x.png')}
           />
 
           <TouchableHighlight
@@ -251,7 +251,7 @@ class Toolbar extends Component {
           >
             <Image
               style={toolbarStyle.feedIcon}
-              source={require('../../assets/icon-assets/unselected-add-note-2x.png')}
+              source={require('../../assets/icon-assets/unselected-add-note-3x.png')}
             />
           </TouchableHighlight>
         </View>
