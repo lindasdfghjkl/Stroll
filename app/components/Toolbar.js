@@ -204,21 +204,20 @@ class Toolbar extends Component {
               source={require('../../assets/icon-assets/unselected-home.png')}
             />
           </TouchableHighlight>
-          {/* <Ionicons name="ios-list" size={50} color="#4AE779" onPress={() => {
-            this.openFeedModal();
-          }}/> */}
+
           <Image
             source={require('../../assets/icon-assets/selected-find-my-loctaion.png')}
           />
-          <Image
-            source={require('../../assets/icon-assets/unselected-add-note.png')}
+
+          <TouchableHighlight
             onPress={() => {
               this.openAddPinModal();
             }}
-          />
-          {/* <Ionicons name="ios-add-circle-outline" size={50} color="#4AE779" onPress={() => {
-            this.openAddPinModal();
-          }}/> */}
+          >
+            <Image
+              source={require('../../assets/icon-assets/unselected-add-note.png')}
+            />
+          </TouchableHighlight>
         </View>
       </View>
     );
