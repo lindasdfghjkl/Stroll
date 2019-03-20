@@ -13,5 +13,10 @@ export default {
         paddingLeft: '6%',
         paddingRight: '6%',
       },
+      feedIcon: {
+          width: 35,
+          height: 38,
+          resizeMode: 'contain'
+      }
       
 }

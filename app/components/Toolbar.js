@@ -91,7 +91,7 @@ class Toolbar extends Component {
           <KeyboardAvoidingView behavior="padding" style={addPinModalStyle.modalContent}>
             <KeyboardAvoidingView behavior="padding" style={addPinModalStyle.modal}>
               <View style={addPinModalStyle.modalHeader}>
-                <Text style={addPinModalStyle.modalTitle}>Add Pin</Text>
+                <Text style={addPinModalStyle.modalTitle}>Add Note</Text>
                 <Ionicons
                   name="ios-close-circle-outline" 
                   size={30} color="#8E8E93" 
@@ -116,13 +116,12 @@ class Toolbar extends Component {
                 multiline={true}
                 keyboardAppearance={'dark'}
               />
-              <Ionicons 
-                name="ios-paper-plane" 
-                size={35} 
-                color="#4AE779" 
-                onPress={() => {this.sendNoteToDB()}}
-                style={addPinModalStyle.postIcon}
-              />
+              <TouchableHighlight onPress={() => {this.sendNoteToDB()}}>
+                  <Image
+                    style={addPinModalStyle.postIcon}
+                    source={require('../../assets/icon-assets/enabled-post-button-2x.png')}
+                  />
+              </TouchableHighlight>
             </KeyboardAvoidingView>
           </KeyboardAvoidingView>
         </Modal>
@@ -157,7 +156,8 @@ class Toolbar extends Component {
                       <CardItem style={feedModalStyle.cardItemStyle}>
                         <Body>
                           <Text style={feedModalStyle.cardTextStyle}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Study group for BIO 100 is meeting
+                            tonight at "The Hub," 7PM.
                           </Text>
                         </Body>
                         <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle}/>
@@ -168,7 +168,7 @@ class Toolbar extends Component {
                       <CardItem style={feedModalStyle.cardItemStyle}>
                         <Body>
                           <Text style={feedModalStyle.cardTextStyle}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            Try the vanilla iced chai tea at Cartel Coffee, it's SO GOOD!
                           </Text>
                         </Body>
                         <Ionicons name="ios-arrow-forward" color="#FF32B1" size={30} style={feedModalStyle.iconStyle}/>
@@ -179,7 +179,40 @@ class Toolbar extends Component {
                       <CardItem style={feedModalStyle.cardItemStyle}>
                         <Body>
                           <Text style={feedModalStyle.cardTextStyle}>
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+                            "Music produces a kind of pleasure human nature can not fully appreciate until  ...
+                          </Text>
+                        </Body>
+                        <Ionicons name="ios-arrow-forward" color="#4B73FF" size={30} style={feedModalStyle.iconStyle}/>
+                      </CardItem>
+                    </Card>
+
+                    <Card style={feedModalStyle.cardStyle}>
+                      <CardItem style={feedModalStyle.cardItemStyle}>
+                        <Body>
+                          <Text style={feedModalStyle.cardTextStyle}>
+                            CASA is having 25% off drinks from 11pm to 2am ... LIT!
+                          </Text>
+                        </Body>
+                        <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle}/>
+                      </CardItem>
+                    </Card>
+
+                    <Card style={feedModalStyle.cardStyle}>
+                      <CardItem style={feedModalStyle.cardItemStyle}>
+                        <Body>
+                          <Text style={feedModalStyle.cardTextStyle}>
+                            Looking to make new friends on campus? Come hang out on the Hayden lawn 5-8!
+                          </Text>
+                        </Body>
+                        <Ionicons name="ios-arrow-forward" color="#FF32B1" size={30} style={feedModalStyle.iconStyle}/>
+                      </CardItem>
+                    </Card>
+
+                    <Card style={feedModalStyle.cardStyle}>
+                      <CardItem style={feedModalStyle.cardItemStyle}>
+                        <Body>
+                          <Text style={feedModalStyle.cardTextStyle}>
+                            Today is the beginning of a better life for all of us!
                           </Text>
                         </Body>
                         <Ionicons name="ios-arrow-forward" color="#4B73FF" size={30} style={feedModalStyle.iconStyle}/>
@@ -201,12 +234,14 @@ class Toolbar extends Component {
             }}
           >
             <Image
-              source={require('../../assets/icon-assets/unselected-home.png')}
+              style={toolbarStyle.feedIcon}
+              source={require('../../assets/icon-assets/unselected-home-2x.png')}
             />
           </TouchableHighlight>
 
           <Image
-            source={require('../../assets/icon-assets/selected-find-my-loctaion.png')}
+            style={toolbarStyle.feedIcon}
+            source={require('../../assets/icon-assets/selected-find-my-loctaion-2x.png')}
           />
 
           <TouchableHighlight
@@ -215,7 +250,8 @@ class Toolbar extends Component {
             }}
           >
             <Image
-              source={require('../../assets/icon-assets/unselected-add-note.png')}
+              style={toolbarStyle.feedIcon}
+              source={require('../../assets/icon-assets/unselected-add-note-2x.png')}
             />
           </TouchableHighlight>
         </View>

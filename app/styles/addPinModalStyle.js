@@ -21,18 +21,20 @@ export default {
         flexDirection: 'row',
         paddingTop: '3%'
       },
-      modalTitle: {      
+      modalTitle: {    
         fontSize: 24,
         color: 'white',
         paddingTop: '3%',
-        paddingBottom: '3%'
+        paddingBottom: '4%'
       },
       closeIcon: {
-        marginLeft: 'auto'
+        marginLeft: 'auto',
+        paddingTop: '3%',
+        paddingBottom: '4%'
       },
       noteInput: {
           height: '60%',
-          borderColor: '#4AE779',
+          borderColor: '#6EEB93',
           color: 'white',
           borderWidth: 2,
           borderRadius: 10,
@@ -40,6 +42,9 @@ export default {
           marginBottom: '5%'
       },
       postIcon: {
-        alignSelf: "flex-end"
+        alignSelf: 'flex-end',
+        width: 35,
+        height: 38,
+        resizeMode: 'contain'
       }
 }
