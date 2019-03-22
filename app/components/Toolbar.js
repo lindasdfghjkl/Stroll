@@ -60,7 +60,7 @@ class Toolbar extends Component {
                 });
             });
             this.setState({
-                notes: items
+                notes: items.reverse()
             });
         });
     }
