@@ -21,6 +21,7 @@ const {
     View,
     TouchableHighlight,
     AlertIOS,
+    Image
 } = ReactNative;
 const geo_options = {
     enableHighAccuracy: true
@@ -314,8 +315,10 @@ const initialRegion = {
 class Home extends Component {
     map = null;
 
+
     constructor(props) {
         super(props);
+
         this.state = {
             markers: [],
             region: {
@@ -324,9 +327,11 @@ class Home extends Component {
                 latitudeDelta: 0.0922,
                 longitudeDelta: 0.0421,
             },
+            currentNote: {},
             ready: true,
         };
         this.itemsRef = this.getRef().child('items');
+        
     }
 
     setRegion(region) {
@@ -383,6 +388,11 @@ class Home extends Component {
 
     }
 
+
+    moveToNote() {
+
+    }
+
     getCurrentPosition() {
         try {
           navigator.geolocation.getCurrentPosition(
@@ -419,18 +429,18 @@ class Home extends Component {
     //     console.log('onRegionChangeComplete', region);
     //   };
 
+
     render() {
         const { region } = this.state;
         const { children, renderMarker, markers } = this.props;
         return (
             <View style={styles.container}>
-
                 <MapView
                     provider="google"
                     ref={ map => { this.map = map }}
                     style={
                         {
-                            height: '85%',
+                            height: '90%',
                             width: '100%',
                         }
                     }
@@ -449,15 +459,21 @@ class Home extends Component {
                             key={marker._key}
                             coordinate={marker.location}
                             title={marker.title}
+                            description={marker.message}
+                            onPress={() => {
+                                //this.toolbar.openNoteModal(marker.title, marker.message);
+                            }}
                             image={pinImage}
-                        />
-                    ))}
+                        >
+                        </MapView.Marker>
+                ))}
 
 
-                  
                 </MapView>
 
-                <Toolbar items={this.itemsRef}/>
+                <Toolbar items={this.itemsRef}></Toolbar>
+
+
             </View>
         )
     }
