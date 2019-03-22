@@ -39,7 +39,7 @@ class Toolbar extends Component {
         };
 
 
-       // this.itemsRef = this.props.items;
+        this.itemsRef = this.props.items;
     }
 
 
@@ -87,7 +87,7 @@ class Toolbar extends Component {
                 this.itemsRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates });
             },
             (error) => this.setState({ error: error.message }),
-            { enableHighAccuracy: true, timeout: 20000 },
+            { enableHighAccuracy: false, timeout: 20000 },
         )
         this.closeAddPinModal();
     }
