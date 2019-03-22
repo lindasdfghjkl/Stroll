@@ -105,7 +105,7 @@ class Toolbar extends Component {
               </View>
               <TextInput
                     style={addPinModalStyle.titleInput}
-                    placeholder={'Enter note here'}
+                    placeholder={'Enter title here'}
                     placeholderTextColor='white'
                     onChangeText={(text) => this.setState({ titleValue: text })}
                     onEndEditing={(e) =>

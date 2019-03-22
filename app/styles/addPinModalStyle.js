@@ -33,7 +33,7 @@ export default {
         paddingBottom: '4%'
       },
       titleInput: {
-        height: '10%',
+        minHeight: '5%',
         borderColor: '#6EEB93',
         color: 'white',
         borderWidth: 2,
@@ -42,13 +42,13 @@ export default {
         marginBottom: '5%'
       },
       noteInput: {
-          height: '55%',
-          borderColor: '#6EEB93',
-          color: 'white',
-          borderWidth: 2,
-          borderRadius: 10,
-          padding: '3%',
-          marginBottom: '5%'
+        height: '55%',
+        borderColor: '#6EEB93',
+        color: 'white',
+        borderWidth: 2,
+        borderRadius: 10,
+        padding: '3%',
+        marginBottom: '5%'
       },
       postIcon: {
         alignSelf: 'flex-end',
