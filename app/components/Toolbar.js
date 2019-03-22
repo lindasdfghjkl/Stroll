@@ -44,8 +44,11 @@ class Toolbar extends Component {
     }
 
     componentDidMount() {
-        var items = [];
+        this.listenForItems();
+    }
 
+    listenForItems() {
+        var items = [];
         this.itemsRef.on('value', (snap) => {
             // get all current notes
             snap.forEach((child) => {
@@ -60,7 +63,6 @@ class Toolbar extends Component {
                 notes: items
             });
         });
-        //console.log(items);
     }
 
 
@@ -79,6 +81,7 @@ class Toolbar extends Component {
     }
 
     setFeedModalVisible(visible) {
+        this.listenForItems();
         this.setState({ feedModalVisible: visible });
     }
 
