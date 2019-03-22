@@ -35,11 +35,32 @@ class Toolbar extends Component {
             noteIsOpen: false,
             noteTitle: '',
             noteMessage: '',
-            noteLocation: { latitude: null, longitude: null }
+            noteLocation: { latitude: null, longitude: null },
+            notes: []
         };
 
 
         this.itemsRef = this.props.items;
+    }
+
+    componentDidMount() {
+        var items = [];
+
+        this.itemsRef.on('value', (snap) => {
+            // get all current notes
+            snap.forEach((child) => {
+                items.push({
+                    title: child.val().title,
+                    message: child.val().message,
+                    location: child.val().location,
+                    _key: child.key
+                });
+            });
+            this.setState({
+                notes: items
+            });
+        });
+        //console.log(items);
     }
 
 
@@ -178,6 +199,31 @@ class Toolbar extends Component {
                                 />
 
                                 <ScrollView style={{ height: '100%' }}>
+                                        {
+                                            this.state.notes.map((note, index) => {
+                                                return (
+                                                    <Card key={index} style={feedModalStyle.cardStyle}>
+                                                        <CardItem
+                                                            style={feedModalStyle.cardItemStyle}
+                                                            button={true}
+                                                            onPress={() => {
+                                                                this.openNoteModal(note.title, note.message);
+                                                            }}>
+                                                            <Body>
+                                                                <Text style={feedModalStyle.cardTextStyle}>
+                                                                    {note.title}
+                                                                </Text>
+                                                            </Body>
+                                                            <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
+                                                        </CardItem>
+                                                    </Card>
+                                                )
+                                            })
+                                         }
+                                </ScrollView>
+
+                                {/*
+                                <ScrollView style={{ height: '100%' }}>
                                     <Card style={feedModalStyle.cardStyle}>
                                         <CardItem style={feedModalStyle.cardItemStyle}
                                             button={true}
@@ -270,6 +316,7 @@ class Toolbar extends Component {
                                         </CardItem>
                                     </Card>
                                 </ScrollView>
+                                */}
                             </View>
                         </View>
                     </View>
