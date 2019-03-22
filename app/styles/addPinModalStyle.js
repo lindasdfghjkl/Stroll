@@ -9,7 +9,7 @@ export default {
       },
       modal: {
         width: '90%',
-        height: '50%',
+        height: '60%',
         backgroundColor: '#212121',
         paddingLeft: '6%',
         paddingRight: '6%',
@@ -32,8 +32,17 @@ export default {
         paddingTop: '3%',
         paddingBottom: '4%'
       },
+      titleInput: {
+        height: '10%',
+        borderColor: '#6EEB93',
+        color: 'white',
+        borderWidth: 2,
+        borderRadius: 10,
+        padding: '3%',
+        marginBottom: '5%'
+      },
       noteInput: {
-          height: '60%',
+          height: '55%',
           borderColor: '#6EEB93',
           color: 'white',
           borderWidth: 2,
