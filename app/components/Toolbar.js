@@ -29,7 +29,9 @@ class Toolbar extends Component {
     this.state = { 
       addPinModalVisible: false,
       feedModalVisible: false,
-      textValue: '', 
+      titleValue: '',
+      messageValue: '',
+      
     };
 
     this.itemsRef = this.props.items;
@@ -54,7 +56,7 @@ class Toolbar extends Component {
 
   openAddPinModal(){
     // Reset the text box to empty, and when that is done open the modal
-    this.setState({textValue: ''}, () => this.setAddPinModalVisible(true));
+    this.setState({titleValue: '', messageValue: ''}, () => this.setAddPinModalVisible(true));
   }
 
   openFeedModal(){
@@ -66,8 +68,8 @@ class Toolbar extends Component {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
-        console.log(coordinates);
-        this.itemsRef.push({ message: this.state.textValue, location: coordinates });
+          console.log(coordinates);
+          this.itemsRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates });
       },
       (error) => this.setState({ error: error.message }),
       { enableHighAccuracy: true, timeout: 20000 },
@@ -102,17 +104,32 @@ class Toolbar extends Component {
                 />
               </View>
               <TextInput
+                    style={addPinModalStyle.noteInput}
+                    placeholder={'Enter note here'}
+                    placeholderTextColor='white'
+                    onChangeText={(text) => this.setState({ titleValue: text })}
+                    onEndEditing={(e) =>
+                        {
+                        this.setState({ titleValue: e.nativeEvent.text })
+                        }
+                    }
+                    onSubmitEditing={Keyboard.dismiss}
+                    value={this.state.titleValue}
+                    multiline={true}
+                    keyboardAppearance={'dark'}
+              />
+              <TextInput
                 style={addPinModalStyle.noteInput}
                 placeholder={'Enter note here'}
                 placeholderTextColor='white'
-                onChangeText={(text) => this.setState({textValue: text})}
+                onChangeText={(text) => this.setState({ messageValue: text})}
                 onEndEditing={(e) =>
                   {
-                    this.setState({textValue: e.nativeEvent.text})
+                    this.setState({ messageValue: e.nativeEvent.text})
                   }
                 }
                 onSubmitEditing={Keyboard.dismiss}
-                value={this.state.textValue}
+                value={this.state.messageValue}
                 multiline={true}
                 keyboardAppearance={'dark'}
               />

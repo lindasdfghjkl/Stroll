@@ -341,21 +341,19 @@ class Home extends Component {
 
     listenForItems(itemsRef) {
         itemsRef.on('value', (snap) => {
-
-            // get all current pins
+            // get all current notes
             var items = [];
             snap.forEach((child) => {
                 items.push({
+                    title: child.val().title,
                     message: child.val().message,
                     location: child.val().location,
                     _key: child.key
                 });
             });
-
             this.setState({
                 markers: items
             });
-
         });
     }
 
@@ -450,7 +448,7 @@ class Home extends Component {
                         <MapView.Marker
                             key={marker._key}
                             coordinate={marker.location}
-                            title={marker.message}
+                            title={marker.title}
                             image={pinImage}
                         />
                     ))}
