@@ -224,13 +224,16 @@ class Toolbar extends Component {
                                         </CardItem>
                                     </Card>
                                     <Card style={feedModalStyle.cardStyle}>
-                                        <CardItem style={feedModalStyle.cardItemStyle}>
+                                        <CardItem
+                                            style={feedModalStyle.cardItemStyle}
+                                            button={true}
+                                            onPress={() => {
+                                                this.openNoteModal('Tickets to TEDxASU on sale!', "The TEDx conference self-organized by ASU students' is kicking-off its fourth year in the Phoenix community. This year's theme, NextGen, will explore life in the 22nd century and how society will build it together.");
+                                            }}>
                                             <Body>
                                                 <Text
-                                                    style={feedModalStyle.cardTextStyle}
-                                                    button={true}
-                                                    onPress={() => { this.openNoteModal() }}>
-                                                    CASA is having 25% off drinks from 11pm to 2am ... LIT!
+                                                    style={feedModalStyle.cardTextStyle}>
+                                                    Tickets to TEDxASU on sale!
                                                 </Text>
                                             </Body>
                                             <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
@@ -240,10 +243,12 @@ class Toolbar extends Component {
                                         <CardItem
                                             style={feedModalStyle.cardItemStyle}
                                             button={true}
-                                            onPress={() => { this.openNoteModal() }}>
+                                            onPress={() => {
+                                                this.openNoteModal("Looking for a talented graphic designer", "I am developing a mobile app for my honors thesis and need a graphic designer. If you are interested, please email me at johnsmith@asu.edu");
+                                            }}>
                                             <Body>
                                                 <Text style={feedModalStyle.cardTextStyle}>
-                                                    Looking to make new friends on campus? Come hang out on the Hayden lawn 5-8!
+                                                    Looking for a talented graphic designer
                                                 </Text>
                                             </Body>
                                             <Ionicons name="ios-arrow-forward" color="#FF32B1" size={30} style={feedModalStyle.iconStyle} />
@@ -253,10 +258,12 @@ class Toolbar extends Component {
                                         <CardItem
                                             style={feedModalStyle.cardItemStyle}
                                             button={true}
-                                            onPress={() => { this.openNoteModal() }}>
+                                            onPress={() => {
+                                                this.openNoteModal("New art installations in the lounge!", "Check out interactive artwork made by undergraduate Digital Culture students. They'll be up until April 30th");
+                                            }}>
                                             <Body>
                                                 <Text style={feedModalStyle.cardTextStyle}>
-                                                    Today is the beginning of a better life for all of us!
+                                                    New art installations in the lounge!
                                                 </Text>
                                             </Body>
                                             <Ionicons name="ios-arrow-forward" color="#4B73FF" size={30} style={feedModalStyle.iconStyle} />
@@ -291,7 +298,7 @@ class Toolbar extends Component {
                                         {this.state.noteTitle}
                                     </Text>
                                     
-                                    <Text style={{ color: 'white', fontSize: 16, lineHeight: 24 }}>
+                                    <Text style={{ color: 'white', fontSize: 18, lineHeight: 24 }}>
                                         {this.state.noteMessage}
                                     </Text>
                                 </ScrollView>

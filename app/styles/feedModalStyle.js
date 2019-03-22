@@ -34,7 +34,8 @@ export default {
       },
       cardTextStyle: {
         color: '#EFEFF4',
-        fontSize: 20
+        fontSize: 24,
+        textAlignVertical: 'center'
       },
       iconStyle: {
           padding: 10
