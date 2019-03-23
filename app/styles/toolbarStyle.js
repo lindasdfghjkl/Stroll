@@ -8,8 +8,6 @@ export default {
         justifyContent: 'space-between',
         height: '30%',
         flexDirection: 'row',
-        // borderTopLeftRadius: 10,
-        // borderTopRightRadius: 10,
         paddingLeft: '6%',
         paddingRight: '6%',
         paddingTop: '2.5%',
