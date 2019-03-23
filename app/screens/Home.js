@@ -468,6 +468,9 @@ class Home extends Component {
                         </MapView.Marker>
                 ))}
 
+                    <View style={{position: 'absolute', marginLeft: 'auto', marginRight: 'auto', left: 0, right: 0, marginTop: '8%'}}>
+                        <Image source={require('../../assets/logo.png')} style={{resizeMode: 'contain', width: 175, height: 87.69, marginLeft: 'auto', marginRight: 'auto', left: 0, right: 0, marginTop: '8%'}}/>
+                    </View>
 
                 </MapView>
 
