@@ -26,17 +26,22 @@ export default {
           borderRadius: 10,
           borderColor: '#4D4D4D',
           marginBottom: '5%',
-          //height: 80
+          height: 85,
+          //alignItems: 'center',
+          //justifyContent: 'center'
       },
       cardItemStyle: {
         backgroundColor: '#4D4D4D',
         borderRadius: 10,
+        height: 75,
+
       },
       cardTextStyle: {
         color: '#EFEFF4',
         fontSize: 24,
         fontFamily: 'asap-regular',
-        textAlignVertical: 'center'
+        textAlignVertical: 'center',
+        height: 75,
       },
       iconStyle: {
           padding: 10

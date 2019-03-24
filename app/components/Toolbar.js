@@ -169,8 +169,9 @@ class Toolbar extends Component {
                                 }
                                 onSubmitEditing={Keyboard.dismiss}
                                 value={this.state.titleValue}
-                                multiline={true}
+                                multiline={false}
                                 keyboardAppearance={'dark'}
+                                maxLength={30} // maximum charachters
                             />
                             <TextInput
                                 style={addPinModalStyle.noteInput}
@@ -199,7 +200,6 @@ class Toolbar extends Component {
 
 
                 {/* Feed Modal */}
-                {/* Hard Coded */}
                 <Modal
                     animationType="slide"
                     transparent={true}
@@ -218,11 +218,11 @@ class Toolbar extends Component {
                                     onPress={() => {this.closeFeedModal(); }}
                                     style={feedModalStyle.closeIcon}
                                 />
-
-                                <ScrollView style={{ height: '100%' }}>
+                                <ScrollView style={{height: '100%'}}>
                                         {
                                             this.state.notes.map((note, index) => {
                                                 return (
+                                                   <View style={{flex: 1}} key={index}>
                                                     <Card key={index} style={feedModalStyle.cardStyle}>
                                                         <CardItem
                                                             style={feedModalStyle.cardItemStyle}
@@ -239,6 +239,7 @@ class Toolbar extends Component {
                                                             <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
                                                         </CardItem>
                                                     </Card>
+                                                   </View>
                                                 )
                                             })
                                          }
