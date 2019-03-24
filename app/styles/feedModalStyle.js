@@ -35,9 +35,22 @@ export default {
       cardTextStyle: {
         color: '#EFEFF4',
         fontSize: 24,
+        fontFamily: 'asap-regular',
         textAlignVertical: 'center'
       },
       iconStyle: {
           padding: 10
+      },
+      expandedFeedTitle: {
+        fontFamily: 'asap-medium',
+        color: 'white', 
+        fontSize: 24, 
+        paddingBottom: 20
+      },
+      expandedFeedText: {
+        fontFamily: 'asap-regular',
+        color: 'white', 
+        fontSize: 18, 
+        lineHeight: 24
       }
 }

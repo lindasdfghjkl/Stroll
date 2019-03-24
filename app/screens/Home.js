@@ -469,7 +469,7 @@ class Home extends Component {
                 ))}
 
                     <View style={{position: 'absolute', marginLeft: 'auto', marginRight: 'auto', left: 0, right: 0, marginTop: '8%'}}>
-                        <Image source={require('../../assets/logo.png')} style={{resizeMode: 'contain', width: 175, height: 87.69, marginLeft: 'auto', marginRight: 'auto', left: 0, right: 0, marginTop: '8%'}}/>
+                        <Image source={require('../../assets/color-logo/4x/color-logo-stroll-text-4x.png')} style={{resizeMode: 'contain', width: 175, height: 87.69, marginLeft: 'auto', marginRight: 'auto', left: 0, right: 0, marginTop: '8%'}}/>
                     </View>
 
                 </MapView>

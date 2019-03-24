@@ -6,6 +6,7 @@ import {
     View, 
     Text, 
     TouchableHighlight,
+    TouchableOpacity,
     TextInput,
     Keyboard,
     KeyboardAvoidingView,
@@ -16,6 +17,7 @@ import {
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
+import {Expo, Font} from 'expo';
 
 // Styles
 import toolbarStyle from '../styles/toolbarStyle';
@@ -30,6 +32,7 @@ class Toolbar extends Component {
         this.state = {
             addPinModalVisible: false,
             feedModalVisible: false,
+            fontLoaded: false,
             titleValue: '',
             messageValue: '',
             noteIsOpen: false,
@@ -43,8 +46,21 @@ class Toolbar extends Component {
         this.itemsRef = this.props.items;
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.listenForItems();
+
+        await Font.loadAsync({
+            'asap-bold': require('../../assets/fonts/Asap-Bold.ttf'),
+            'asap-bold-italic': require('../../assets/fonts/Asap-BoldItalic.ttf'),
+            'asap-italic': require('../../assets/fonts/Asap-Italic.ttf'),
+            'asap-medium': require('../../assets/fonts/Asap-Medium.ttf'),
+            'asap-medium-italic': require('../../assets/fonts/Asap-MediumItalic.ttf'),
+            'asap-regular': require('../../assets/fonts/Asap-Regular.ttf'),
+            'asap-semi-bold': require('../../assets/fonts/Asap-SemiBold.ttf'),
+            'asap-semi-bold-italic': require('../../assets/fonts/Asap-SemiBoldItalic.ttf'),
+        });
+        
+        this.setState({fontLoaded: true})
     }
 
     listenForItems() {
@@ -130,7 +146,9 @@ class Toolbar extends Component {
                     <KeyboardAvoidingView behavior="padding" style={addPinModalStyle.modalContent}>
                         <KeyboardAvoidingView behavior="padding" style={addPinModalStyle.modal}>
                             <View style={addPinModalStyle.modalHeader}>
+                                {this.state.fontLoaded == true ? (
                                 <Text style={addPinModalStyle.modalTitle}>Add Note</Text>
+                                ) : null }
                                 <Ionicons
                                     name="ios-close-circle-outline"
                                     size={30} color="#8E8E93"
@@ -160,15 +178,15 @@ class Toolbar extends Component {
                                 placeholderTextColor='white'
                                 onChangeText={(text) => this.setState({ messageValue: text })}
                                 onEndEditing={(e) => {
-                                    this.setState({ messageValue: e.nativeEvent.text })
-                                }
+                                    this.setState({ messageValue: e.nativeEvent.text })}
                                 }
                                 onSubmitEditing={Keyboard.dismiss}
                                 value={this.state.messageValue}
                                 multiline={true}
                                 keyboardAppearance={'dark'}
+                                keyboardDismissMode={'onDrag'}
                             />
-                            <TouchableHighlight onPress={() => { this.sendNoteToDB() }}>
+                            <TouchableHighlight style={{width: 35, height: 38, alignSelf: 'flex-end'}} onPress={() => { this.sendNoteToDB() }}>
                                 <Image
                                     style={addPinModalStyle.postIcon}
                                     source={require('../../assets/icon-assets/enabled-post-button-3x.png')}
@@ -213,9 +231,10 @@ class Toolbar extends Component {
                                                                 this.openNoteModal(note.title, note.message);
                                                             }}>
                                                             <Body>
+                                                                {this.state.fontLoaded == true ? (
                                                                 <Text style={feedModalStyle.cardTextStyle}>
                                                                     {note.title}
-                                                                </Text>
+                                                                </Text> ) : null }
                                                             </Body>
                                                             <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
                                                         </CardItem>
@@ -224,102 +243,6 @@ class Toolbar extends Component {
                                             })
                                          }
                                 </ScrollView>
-
-                                {/*
-                                <ScrollView style={{ height: '100%' }}>
-                                    <Card style={feedModalStyle.cardStyle}>
-                                        <CardItem style={feedModalStyle.cardItemStyle}
-                                            button={true}
-                                            onPress={() => {
-                                                this.openNoteModal("Study group for BIO 130", "Join us tonight at Hayden Library in room 174 to study for the midterm on Monday!");
-                                            }}>
-                                            <Body>
-                                                <Text style={feedModalStyle.cardTextStyle}>
-                                                    Study group for BIO 130
-                                                 </Text>
-                                            </Body>
-                                            <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
-                                        </CardItem>
-                                    </Card>
-
-                                    <Card style={feedModalStyle.cardStyle}>
-                                        <CardItem
-                                            style={feedModalStyle.cardItemStyle}
-                                            button={true}
-                                            onPress={() => {
-                                                this.openNoteModal("Don't know what to order at Cartel Coffee?", "Try the iced vanilla chai tea! It's SO GOOD!");
-                                            }}>
-                                            <Body>
-                                                <Text style={feedModalStyle.cardTextStyle}>
-                                                    Don't know what to order at Cartel Coffee Lab?
-                                                </Text>
-                                            </Body>
-                                            <Ionicons name="ios-arrow-forward" color="#FF32B1" size={30} style={feedModalStyle.iconStyle} />
-                                        </CardItem>
-                                    </Card>
-                                    <Card style={feedModalStyle.cardStyle}>
-                                        <CardItem
-                                            style={feedModalStyle.cardItemStyle}
-                                            button={true}
-                                            onPress={() => {
-                                                this.openNoteModal('Quote of the Day', '"Music produces a kind of pleasure which human nature cannot do without." - Confucius');
-                                            }}>
-                                            <Body>
-                                                <Text style={feedModalStyle.cardTextStyle}>
-                                                    Quote of the Day
-                                                </Text>
-                                            </Body>
-                                            <Ionicons name="ios-arrow-forward" color="#4B73FF" size={30} style={feedModalStyle.iconStyle} />
-                                        </CardItem>
-                                    </Card>
-                                    <Card style={feedModalStyle.cardStyle}>
-                                        <CardItem
-                                            style={feedModalStyle.cardItemStyle}
-                                            button={true}
-                                            onPress={() => {
-                                                this.openNoteModal('Tickets to TEDxASU on sale!', "The TEDx conference self-organized by ASU students' is kicking-off its fourth year in the Phoenix community. This year's theme, NextGen, will explore life in the 22nd century and how society will build it together.");
-                                            }}>
-                                            <Body>
-                                                <Text
-                                                    style={feedModalStyle.cardTextStyle}>
-                                                    Tickets to TEDxASU on sale!
-                                                </Text>
-                                            </Body>
-                                            <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
-                                        </CardItem>
-                                    </Card>
-                                    <Card style={feedModalStyle.cardStyle}>
-                                        <CardItem
-                                            style={feedModalStyle.cardItemStyle}
-                                            button={true}
-                                            onPress={() => {
-                                                this.openNoteModal("Looking for a talented graphic designer", "I am developing a mobile app for my honors thesis and need a graphic designer. If you are interested, please email me at johnsmith@asu.edu");
-                                            }}>
-                                            <Body>
-                                                <Text style={feedModalStyle.cardTextStyle}>
-                                                    Looking for a talented graphic designer
-                                                </Text>
-                                            </Body>
-                                            <Ionicons name="ios-arrow-forward" color="#FF32B1" size={30} style={feedModalStyle.iconStyle} />
-                                        </CardItem>
-                                    </Card>
-                                    <Card style={feedModalStyle.cardStyle}>
-                                        <CardItem
-                                            style={feedModalStyle.cardItemStyle}
-                                            button={true}
-                                            onPress={() => {
-                                                this.openNoteModal("New art installations in the lounge!", "Check out interactive artwork made by undergraduate Digital Culture students. They'll be up until April 30th");
-                                            }}>
-                                            <Body>
-                                                <Text style={feedModalStyle.cardTextStyle}>
-                                                    New art installations in the lounge!
-                                                </Text>
-                                            </Body>
-                                            <Ionicons name="ios-arrow-forward" color="#4B73FF" size={30} style={feedModalStyle.iconStyle} />
-                                        </CardItem>
-                                    </Card>
-                                </ScrollView>
-                                */}
                             </View>
                         </View>
                     </View>
@@ -344,13 +267,15 @@ class Toolbar extends Component {
                                 />
 
                                 <ScrollView style={{ height: '100%' }}>
-                                    <Text style={{ color: 'white', fontSize: 24, paddingBottom: 20 }}>
+                                    {this.state.fontLoaded == true ? (
+                                    <Text style={feedModalStyle.expandedFeedTitle}>
                                         {this.state.noteTitle}
-                                    </Text>
+                                    </Text> ) : null }
                                     
-                                    <Text style={{ color: 'white', fontSize: 18, lineHeight: 24 }}>
+                                    {this.state.fontLoaded == true ? (
+                                    <Text style={feedModalStyle.expandedFeedText}>
                                         {this.state.noteMessage}
-                                    </Text>
+                                    </Text> ) : null }
                                 </ScrollView>
                             </View>
                         </View>
@@ -358,7 +283,7 @@ class Toolbar extends Component {
                 </Modal>
 
 
-                {/* Main Toolbar with two icons */}
+               { /* Main Toolbar with two icons */}
                 <View style={toolbarStyle.navbar}>
                     <TouchableHighlight
                         onPress={() => {
