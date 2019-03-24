@@ -25,7 +25,8 @@ export default {
         fontSize: 24,
         color: 'white',
         paddingTop: '3%',
-        paddingBottom: '4%'
+        paddingBottom: '4%',
+        fontFamily: 'asap-medium'
       },
       closeIcon: {
         marginLeft: 'auto',
@@ -39,7 +40,9 @@ export default {
         borderWidth: 2,
         borderRadius: 10,
         padding: '3%',
-        marginBottom: '5%'
+        marginBottom: '5%',
+        fontFamily: 'asap-regular',
+        fontSize: 20
       },
       noteInput: {
         height: '55%',
@@ -48,7 +51,9 @@ export default {
         borderWidth: 2,
         borderRadius: 10,
         padding: '3%',
-        marginBottom: '5%'
+        marginBottom: '5%',
+        fontFamily: 'asap-regular',
+        fontSize: 20
       },
       postIcon: {
         alignSelf: 'flex-end',
