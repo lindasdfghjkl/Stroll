@@ -17,12 +17,25 @@ import {
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
-import {Expo, Font, Permissions, TaskManager} from 'expo';
+import {Expo, Font, Permissions, TaskManager, Location} from 'expo';
 
 // Styles
 import toolbarStyle from '../styles/toolbarStyle';
 import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
+
+TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, error }) => {
+    console.log("Here");
+    if (error) {
+        console.log('GEO_TRACK_LOCATION - ERROR', { error });
+        return;
+    }
+    if (eventType === Location.GeofencingEventType.Enter) {
+        console.log('GEO_TRACK_LOCATION - ENTER', { eventType, region });
+    } else if (eventType === Location.GeofencingEventType.Exit) {
+        console.log('GEO_TRACK_LOCATION - EXIT', { eventType, region});
+    }
+});
 
 
 class Toolbar extends Component {
@@ -39,13 +52,15 @@ class Toolbar extends Component {
             noteTitle: '',
             noteMessage: '',
             noteLocation: { latitude: null, longitude: null },
-            notes: []
+            notes: [],
+            geofencingRegions: [],
         };
 
 
         this.itemsRef = this.props.items;
     }
 
+   
     async componentDidMount() {
         this.listenForItems();
 
@@ -65,6 +80,8 @@ class Toolbar extends Component {
 
     listenForItems() {
         var items = [];
+        var geofencingObjs = [];
+
         this.itemsRef.on('value', (snap) => {
             // get all current notes
             snap.forEach((child) => {
@@ -74,10 +91,30 @@ class Toolbar extends Component {
                     location: child.val().location,
                     _key: child.key
                 });
+
+                //console.log("Pusing LAT: " + child.val().location.latitude);
+                //console.log("Pusing LONG: " + child.val().location.longitude);
+                geofencingObjs.push({
+                    latitude: child.val().location.latitude,
+                    longitude: child.val().location.longitude,
+                    radius: 50,
+                    notifyOnEnter: true,
+                    notfyOnExut: false
+                });
             });
+
+        
+
             this.setState({
                 notes: items.reverse()
             });
+
+            this.setState({
+                geofencingRegions: geofencingObjs
+            });
+
+            Location.startGeofencingAsync('GEO_TRACK_LOCATION', this.state.geofencingRegions);
+            console.log(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION'));
         });
     }
 
