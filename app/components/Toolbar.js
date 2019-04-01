@@ -17,7 +17,7 @@ import {
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
-import {Expo, Font} from 'expo';
+import {Expo, Font, Permissions, TaskManager} from 'expo';
 
 // Styles
 import toolbarStyle from '../styles/toolbarStyle';
