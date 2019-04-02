@@ -25,11 +25,14 @@ import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
 
 TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, error }) => {
-    console.log("Here");
     if (error) {
         console.log('GEO_TRACK_LOCATION - ERROR', { error });
         return;
+    } else {
+        console.log("NO GEOFENCING ERROR");
     }
+
+
     if (eventType === Location.GeofencingEventType.Enter) {
         console.log('GEO_TRACK_LOCATION - ENTER', { eventType, region });
     } else if (eventType === Location.GeofencingEventType.Exit) {
@@ -37,6 +40,13 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
     }
 });
 
+TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
+    if(error) {
+        console.log("ERROR");
+    } else {
+        console.log(data);
+    }
+});
 
 class Toolbar extends Component {
     constructor(props) {
@@ -60,8 +70,27 @@ class Toolbar extends Component {
         this.itemsRef = this.props.items;
     }
 
-   
+//    async handleLocationUpdate({data, error}) {
+//         if(error) {
+//             console.log("ERROR");
+//         } else {
+//             console.log(data);
+//         }
+//    }
+
+   async initializeBackgroundLocation(){
+        let isRegistered = await TaskManager.isTaskRegisteredAsync('BACKGROUND_LOCATION_UPDATES_TASK')
+        if (!isRegistered) await Location.startLocationUpdatesAsync('BACKGROUND_LOCATION_UPDATES_TASK', {
+            accuracy: Location.Accuracy.High,
+            /* after edit */
+            timeInterval: 2500,
+            distanceInterval: 5,
+        });
+    }
+
     async componentDidMount() {
+        
+        this.initializeBackgroundLocation();
         this.listenForItems();
 
         await Font.loadAsync({
@@ -97,9 +126,9 @@ class Toolbar extends Component {
                 geofencingObjs.push({
                     latitude: child.val().location.latitude,
                     longitude: child.val().location.longitude,
-                    radius: 50,
+                    radius: 5,
                     notifyOnEnter: true,
-                    notfyOnExut: false
+                    notfyOnExit: true
                 });
             });
 
@@ -113,8 +142,17 @@ class Toolbar extends Component {
                 geofencingRegions: geofencingObjs
             });
 
-            Location.startGeofencingAsync('GEO_TRACK_LOCATION', this.state.geofencingRegions);
-            console.log(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION'));
+            // geofencingObjs.forEach(function(element) {
+            //     console.log(element.latitude);
+            //     console.log(element.longitude);
+            //     console.log(element.notifyOnEnter);
+            // });
+            
+            Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofencingObjs);
+
+            if(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION')){
+                console.log("Geofencing Started");
+            }
         });
     }
 
