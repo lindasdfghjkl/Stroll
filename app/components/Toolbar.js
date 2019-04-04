@@ -25,24 +25,24 @@ import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
 
 TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, error }) => {
-    console.log("DEFINING GEOFENCING TASK");
+    console.log("--- IN GEOFENCING TASK ---");
     if (error) {
         console.log('GEO_TRACK_LOCATION - ERROR ' + error.message);
         return;
     } else {
-        console.log("NO GEOFENCING ERROR");
+        //console.log("NO GEOFENCING ERROR");
     }
 
 
     if (eventType === Location.GeofencingEventType.Enter) {
         console.log('GEO_TRACK_LOCATION - ENTER: ', region );
     } else if (eventType === Location.GeofencingEventType.Exit) {
-        console.log('GEO_TRACK_LOCATION - EXIT: ', region);
+        //console.log('GEO_TRACK_LOCATION - EXIT: ', region);
     }
 });
 
 TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
-    console.log("DEFINING LOCATION TASK");
+    console.log("--- IN LOCATION TASK ---");
     if(error) {
         console.log("ERROR");
     } else {
@@ -128,9 +128,9 @@ class Toolbar extends Component {
                 geofencingObjs.push({
                     latitude: child.val().location.latitude,
                     longitude: child.val().location.longitude,
-                    radius: 2,
+                    radius: 1,
                     notifyOnEnter: true,
-                    notifyOnExit: true
+                    notifyOnExit: false
                 });
             });
 
@@ -149,7 +149,7 @@ class Toolbar extends Component {
             // });
             
             Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofencingObjs);
-
+            //Location.stopGeofencingAsync('GEO_TRACK_LOCATION');
             if(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION')){
                 console.log("Geofencing Started");
             }
