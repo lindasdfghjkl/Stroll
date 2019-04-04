@@ -25,8 +25,9 @@ import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
 
 TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, error }) => {
+    console.log("DEFINING GEOFENCING TASK");
     if (error) {
-        console.log('GEO_TRACK_LOCATION - ERROR', { error });
+        console.log('GEO_TRACK_LOCATION - ERROR ' + error.message);
         return;
     } else {
         console.log("NO GEOFENCING ERROR");
@@ -34,17 +35,18 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
 
 
     if (eventType === Location.GeofencingEventType.Enter) {
-        console.log('GEO_TRACK_LOCATION - ENTER', { eventType, region });
+        console.log('GEO_TRACK_LOCATION - ENTER: ', region );
     } else if (eventType === Location.GeofencingEventType.Exit) {
-        console.log('GEO_TRACK_LOCATION - EXIT', { eventType, region});
+        console.log('GEO_TRACK_LOCATION - EXIT: ', region);
     }
 });
 
 TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
+    console.log("DEFINING LOCATION TASK");
     if(error) {
         console.log("ERROR");
     } else {
-        console.log(data);
+        //console.log(data);
     }
 });
 
@@ -84,7 +86,7 @@ class Toolbar extends Component {
             accuracy: Location.Accuracy.High,
             /* after edit */
             timeInterval: 2500,
-            distanceInterval: 5,
+            distanceInterval: 2,
         });
     }
 
@@ -126,9 +128,9 @@ class Toolbar extends Component {
                 geofencingObjs.push({
                     latitude: child.val().location.latitude,
                     longitude: child.val().location.longitude,
-                    radius: 5,
+                    radius: 2,
                     notifyOnEnter: true,
-                    notfyOnExit: true
+                    notifyOnExit: true
                 });
             });
 
@@ -143,9 +145,7 @@ class Toolbar extends Component {
             });
 
             // geofencingObjs.forEach(function(element) {
-            //     console.log(element.latitude);
-            //     console.log(element.longitude);
-            //     console.log(element.notifyOnEnter);
+            //     console.log(element);
             // });
             
             Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofencingObjs);
