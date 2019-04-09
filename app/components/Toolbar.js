@@ -37,7 +37,7 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
     if (eventType === Location.GeofencingEventType.Enter) {
         console.log('GEO_TRACK_LOCATION - ENTER: ', region );
     } else if (eventType === Location.GeofencingEventType.Exit) {
-        //console.log('GEO_TRACK_LOCATION - EXIT: ', region);
+        console.log('GEO_TRACK_LOCATION - EXIT: ', region);
     }
 });
 
@@ -125,6 +125,7 @@ class Toolbar extends Component {
 
                 //console.log("Pusing LAT: " + child.val().location.latitude);
                 //console.log("Pusing LONG: " + child.val().location.longitude);
+                geofencingObjs = [];
                 geofencingObjs.push({
                     latitude: child.val().location.latitude,
                     longitude: child.val().location.longitude,
@@ -148,6 +149,7 @@ class Toolbar extends Component {
             //     console.log(element);
             // });
             
+           
             Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofencingObjs);
             //Location.stopGeofencingAsync('GEO_TRACK_LOCATION');
             if(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION')){
