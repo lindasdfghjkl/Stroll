@@ -50,6 +50,7 @@ TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
     }
 });
 
+
 class Toolbar extends Component {
     constructor(props) {
         super(props);
@@ -111,10 +112,11 @@ class Toolbar extends Component {
 
     listenForItems() {
         var items = [];
-        var geofencingObjs = [];
 
         this.itemsRef.on('value', (snap) => {
             // get all current notes
+            var geofencingObjs = [];
+            
             snap.forEach((child) => {
                 items.push({
                     title: child.val().title,
@@ -123,34 +125,51 @@ class Toolbar extends Component {
                     _key: child.key
                 });
 
-                //console.log("Pusing LAT: " + child.val().location.latitude);
-                //console.log("Pusing LONG: " + child.val().location.longitude);
-                geofencingObjs = [];
+                // console.log("Pushing LAT: " + child.val().location.latitude);
+                // console.log("Pushing LONG: " + child.val().location.longitude);
+                
                 geofencingObjs.push({
                     latitude: child.val().location.latitude,
                     longitude: child.val().location.longitude,
                     radius: 1,
                     notifyOnEnter: true,
-                    notifyOnExit: false
+                    notifyOnExit: true
                 });
+            
             });
 
-        
+            // items.forEach(function(element) {
+            //     console.log(element);
+            // });
 
+            var combinedArray = [];
+            // comb.concat(locs);
+            // if(this.state.geofencingRegions.size != 0){
+            //     comb.concat(this.state.geofencingRegions);
+            // }
+
+            geofencingObjs.forEach(function(element) {
+                combinedArray.push(element);
+            });
+
+            this.state.geofencingRegions.forEach(function(element) {
+                combinedArray.push(element);
+            });
+            
             this.setState({
                 notes: items.reverse()
             });
 
             this.setState({
-                geofencingRegions: geofencingObjs
+                geofencingRegions: combinedArray
             });
 
-            // geofencingObjs.forEach(function(element) {
+            // combinedArray.forEach(function(element) {
             //     console.log(element);
             // });
             
-           
-            Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofencingObjs);
+            
+            Location.startGeofencingAsync('GEO_TRACK_LOCATION', combinedArray);
             //Location.stopGeofencingAsync('GEO_TRACK_LOCATION');
             if(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION')){
                 console.log("Geofencing Started");
