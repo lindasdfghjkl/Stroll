@@ -362,7 +362,24 @@ class Home extends Component {
         });
     }
 
+    async checkPermissions() {
+        const { Permissions } = Expo;
+        const { status: statusLoc, expires: expiresLoc, permissions: permissionsLoc } =  await Permissions.getAsync(Permissions.LOCATION);
+        if (statusLoc !== 'granted') {
+            const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
+            if (status !== 'granted') {
+                throw new Error('Location permission not granted');
+            }
+        } 
+
+        const { status: statusNot, expires: expiresNot, permissions: permissionsNot } = Permissions.getAsync(Permissions.NOTIFICATIONS);
+        if (statusNot !== 'granted') {
+            const { status, permissions } = Permissions.askAsync(Permissions.NOTIFICATIONS);
+        }
+    }
+
     componentDidMount() {
+        this.checkPermissions();
         this.getCurrentPosition();
         this.listenForItems(this.itemsRef);
 

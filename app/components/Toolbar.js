@@ -17,12 +17,47 @@ import {
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
-import {Expo, Font} from 'expo';
+import {Expo, Font, Permissions, TaskManager, Location} from 'expo';
 
 // Styles
 import toolbarStyle from '../styles/toolbarStyle';
 import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
+
+TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, error }) => {
+    console.log("--- IN GEOFENCING TASK ---");
+    if (error) {
+        console.log('GEO_TRACK_LOCATION - ERROR ' + error.message);
+        return;
+    } else {
+        //console.log("NO GEOFENCING ERROR");
+    }
+
+
+    if (eventType === Location.GeofencingEventType.Enter) {
+        console.log('GEO_TRACK_LOCATION - ENTER: ', region );
+        queryFirebase(region.latitude, region.longitude);
+    } else if (eventType === Location.GeofencingEventType.Exit) {
+       // console.log('GEO_TRACK_LOCATION - EXIT: ', region);
+    }
+});
+
+global.queryFirebase = function queryFirebase(lat, long) {
+    //console.log(global.fireBaseRef);
+    
+    // Query the DB based on the region
+};
+
+TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
+    console.log("--- IN LOCATION TASK ---");
+    if(error) {
+        console.log("ERROR");
+    } else {
+        //console.log(data);
+    }
+});
+
+
 
 
 class Toolbar extends Component {
@@ -39,14 +74,37 @@ class Toolbar extends Component {
             noteTitle: '',
             noteMessage: '',
             noteLocation: { latitude: null, longitude: null },
-            notes: []
+            notes: [],
+            geofencingRegions: [],
         };
 
 
         this.itemsRef = this.props.items;
+        global.fireBaseRef = this.itemsRef;
+    }
+
+//    async handleLocationUpdate({data, error}) {
+//         if(error) {
+//             console.log("ERROR");
+//         } else {
+//             console.log(data);
+//         }
+//    }
+
+    
+    async initializeBackgroundLocation(){
+        let isRegistered = await TaskManager.isTaskRegisteredAsync('BACKGROUND_LOCATION_UPDATES_TASK')
+        if (!isRegistered) await Location.startLocationUpdatesAsync('BACKGROUND_LOCATION_UPDATES_TASK', {
+            accuracy: Location.Accuracy.High,
+            /* after edit */
+            timeInterval: 2500,
+            distanceInterval: 2,
+        });
     }
 
     async componentDidMount() {
+        
+        this.initializeBackgroundLocation();
         this.listenForItems();
 
         await Font.loadAsync({
@@ -65,8 +123,11 @@ class Toolbar extends Component {
 
     listenForItems() {
         var items = [];
+
         this.itemsRef.on('value', (snap) => {
             // get all current notes
+            var geofencingObjs = [];
+            
             snap.forEach((child) => {
                 items.push({
                     title: child.val().title,
@@ -74,10 +135,56 @@ class Toolbar extends Component {
                     location: child.val().location,
                     _key: child.key
                 });
+
+                // console.log("Pushing LAT: " + child.val().location.latitude);
+                // console.log("Pushing LONG: " + child.val().location.longitude);
+                
+                geofencingObjs.push({
+                    latitude: child.val().location.latitude,
+                    longitude: child.val().location.longitude,
+                    radius: 0.6,
+                    notifyOnEnter: true,
+                    notifyOnExit: false
+                });
+            
             });
+
+            // items.forEach(function(element) {
+            //     console.log(element);
+            // });
+
+            var combinedArray = [];
+            // comb.concat(locs);
+            // if(this.state.geofencingRegions.size != 0){
+            //     comb.concat(this.state.geofencingRegions);
+            // }
+
+            geofencingObjs.forEach(function(element) {
+                combinedArray.push(element);
+            });
+
+            this.state.geofencingRegions.forEach(function(element) {
+                combinedArray.push(element);
+            });
+            
             this.setState({
                 notes: items.reverse()
             });
+
+            this.setState({
+                geofencingRegions: combinedArray
+            });
+
+            // combinedArray.forEach(function(element) {
+            //     console.log(element);
+            // });
+            
+            
+            Location.startGeofencingAsync('GEO_TRACK_LOCATION', combinedArray);
+            //Location.stopGeofencingAsync('GEO_TRACK_LOCATION');
+            if(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION')){
+                console.log("Geofencing Started");
+            }
         });
     }
 
