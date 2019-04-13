@@ -36,10 +36,17 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
 
     if (eventType === Location.GeofencingEventType.Enter) {
         console.log('GEO_TRACK_LOCATION - ENTER: ', region );
+        queryFirebase(region.latitude, region.longitude);
     } else if (eventType === Location.GeofencingEventType.Exit) {
-        console.log('GEO_TRACK_LOCATION - EXIT: ', region);
+       // console.log('GEO_TRACK_LOCATION - EXIT: ', region);
     }
 });
+
+global.queryFirebase = function queryFirebase(lat, long) {
+    //console.log(global.fireBaseRef);
+    
+    // Query the DB based on the region
+};
 
 TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
     console.log("--- IN LOCATION TASK ---");
@@ -49,6 +56,8 @@ TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
         //console.log(data);
     }
 });
+
+
 
 
 class Toolbar extends Component {
@@ -71,6 +80,7 @@ class Toolbar extends Component {
 
 
         this.itemsRef = this.props.items;
+        global.fireBaseRef = this.itemsRef;
     }
 
 //    async handleLocationUpdate({data, error}) {
@@ -81,7 +91,8 @@ class Toolbar extends Component {
 //         }
 //    }
 
-   async initializeBackgroundLocation(){
+    
+    async initializeBackgroundLocation(){
         let isRegistered = await TaskManager.isTaskRegisteredAsync('BACKGROUND_LOCATION_UPDATES_TASK')
         if (!isRegistered) await Location.startLocationUpdatesAsync('BACKGROUND_LOCATION_UPDATES_TASK', {
             accuracy: Location.Accuracy.High,
@@ -131,9 +142,9 @@ class Toolbar extends Component {
                 geofencingObjs.push({
                     latitude: child.val().location.latitude,
                     longitude: child.val().location.longitude,
-                    radius: 1,
+                    radius: 0.6,
                     notifyOnEnter: true,
-                    notifyOnExit: true
+                    notifyOnExit: false
                 });
             
             });
