@@ -42,11 +42,28 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
     }
 });
 
+global.feed_items = [];
+
 global.queryFirebase = function queryFirebase(lat, long) {
     //console.log(global.fireBaseRef);
     
     // Query the DB based on the region
+    //var query = global.fireBaseRef.orderByChild('latitude');
+   var query = global.fireBaseRef.orderByChild('latitude');
+
+    console.log("--- QUERY RESULT ---");
+    //console.log(query);
+    // global.feed_items.forEach(function(element) {
+    //     console.log(element);
+    // })
+    query.once('value', function(snapshot) {
+        snapshot.forEach(function(child) {
+            if(child.val().location.latitude == lat && child.val().location.longitude == long)
+                console.log(child.key, child.val().location)
+        })
+    })
 };
+
 
 TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
     console.log("--- IN LOCATION TASK ---");
