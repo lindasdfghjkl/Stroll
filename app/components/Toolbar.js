@@ -48,10 +48,9 @@ global.queryFirebase = function queryFirebase(lat, long) {
     //console.log(global.fireBaseRef);
     
     // Query the DB based on the region
-    //var query = global.fireBaseRef.orderByChild('latitude');
-   var query = global.fireBaseRef.orderByChild('latitude');
+    var query = global.fireBaseRef.orderByChild('latitude');
 
-    console.log("--- QUERY RESULT ---");
+    //console.log("--- QUERY RESULT ---");
     //console.log(query);
     
     query.once('value', function(snapshot) {
@@ -59,13 +58,23 @@ global.queryFirebase = function queryFirebase(lat, long) {
             if(child.val().location.latitude == lat && child.val().location.longitude == long)
             {
                 //  May need to add a check here for if the item is already in the array
-
-                global.feed_items.push({
+                var noteObj = {
                     title: child.val().title,
                     message: child.val().message,
                     location: child.val().location,
                     _key: child.key
-                });
+                };
+
+                console.log(global.feed_items.indexOf(noteObj));
+
+                if(global.feed_items.indexOf(noteObj) == -1){
+                    global.feed_items.push({
+                        title: child.val().title,
+                        message: child.val().message,
+                        location: child.val().location,
+                        _key: child.key
+                    }); 
+                }
             }    
             //console.log(child.key, child.val().location)
         })
@@ -171,7 +180,7 @@ class Toolbar extends Component {
                 geofencingObjs.push({
                     latitude: child.val().location.latitude,
                     longitude: child.val().location.longitude,
-                    radius: 0.6,
+                    radius: 0.5,
                     notifyOnEnter: true,
                     notifyOnExit: false
                 });
