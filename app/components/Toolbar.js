@@ -53,15 +53,27 @@ global.queryFirebase = function queryFirebase(lat, long) {
 
     console.log("--- QUERY RESULT ---");
     //console.log(query);
-    // global.feed_items.forEach(function(element) {
-    //     console.log(element);
-    // })
+    
     query.once('value', function(snapshot) {
         snapshot.forEach(function(child) {
             if(child.val().location.latitude == lat && child.val().location.longitude == long)
-                console.log(child.key, child.val().location)
+            {
+                //  May need to add a check here for if the item is already in the array
+
+                global.feed_items.push({
+                    title: child.val().title,
+                    message: child.val().message,
+                    location: child.val().location,
+                    _key: child.key
+                });
+            }    
+            //console.log(child.key, child.val().location)
         })
-    })
+    });
+
+    // global.feed_items.forEach(function(element) {
+    //     console.log(element);
+    // })
 };
 
 
@@ -344,7 +356,7 @@ class Toolbar extends Component {
                                 />
                                 <ScrollView style={{height: '100%'}}>
                                         {
-                                            this.state.notes.map((note, index) => {
+                                            global.feed_items.map((note, index) => {
                                                 return (
                                                    <View style={{flex: 1}} key={index}>
                                                     <Card key={index} style={feedModalStyle.cardStyle}>
