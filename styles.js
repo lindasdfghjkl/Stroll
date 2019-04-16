@@ -35,7 +35,7 @@ var styles = StyleSheet.create({
     borderColor: 'transparent',
     borderWidth: 1,
     justifyContent: 'center',
-    height: '40%',
+    height: '100%',
     flexDirection: 'row',
     borderTopLeftRadius: 10,
     borderTopRightRadius: 10,

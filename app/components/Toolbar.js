@@ -14,15 +14,299 @@ import {
     Image,
     StyleSheet
   } from 'react-native';
+import MapView from 'react-native-maps';
+import Marker from 'react-native-maps';
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
 import {Expo, Font, Permissions, TaskManager, Location} from 'expo';
 
 // Styles
+import styles from '../../styles.js';
 import toolbarStyle from '../styles/toolbarStyle';
 import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
+import pinImage from '../../assets/icon-assets/big-note-green.png';
+import locatorImage from '../../assets/icon-assets/locator.png';
+const mapStyle =
+    [
+        {
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": "#212121"
+                }
+            ]
+        },
+        {
+            "elementType": "labels.icon",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#757575"
+                }
+            ]
+        },
+        {
+            "elementType": "labels.text.stroke",
+            "stylers": [
+                {
+                    "color": "#212121"
+                }
+            ]
+        },
+        {
+            "featureType": "administrative",
+            "stylers": [
+                {
+                    "color": "#9d9d9e"
+                }
+            ]
+        },
+        {
+            "featureType": "administrative",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": "#747474"
+                }
+            ]
+        },
+        {
+            "featureType": "administrative.country",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#9e9e9e"
+                }
+            ]
+        },
+        {
+            "featureType": "administrative.land_parcel",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "administrative.locality",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#1f1f1f"
+                }
+            ]
+        },
+        {
+            "featureType": "landscape.man_made",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": "#555555"
+                }
+            ]
+        },
+        {
+            "featureType": "landscape.natural",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#595a56"
+                }
+            ]
+        },
+        {
+            "featureType": "poi",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "poi",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#747474"
+                }
+            ]
+        },
+        {
+            "featureType": "poi.park",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": "#181818"
+                }
+            ]
+        },
+        {
+            "featureType": "poi.park",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#606060"
+                }
+            ]
+        },
+        {
+            "featureType": "poi.park",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+                {
+                    "color": "#1b1b1b"
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "stylers": [
+                {
+                    "visibility": "on"
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "elementType": "geometry.fill",
+            "stylers": [
+                {
+                    "color": "#a3a3a3"
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "elementType": "geometry.stroke",
+            "stylers": [
+                {
+                    "visibility": "off"
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#313131"
+                }
+            ]
+        },
+        {
+            "featureType": "road",
+            "elementType": "labels.text.stroke",
+            "stylers": [
+                {
+                    "color": "#bebebe"
+                },
+                {
+                    "visibility": "on"
+                }
+            ]
+        },
+        {
+            "featureType": "road.arterial",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": "#373737"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": "#3c3c3c"
+                }
+            ]
+        },
+        {
+            "featureType": "road.highway.controlled_access",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": "#4e4e4e"
+                }
+            ]
+        },
+        {
+            "featureType": "road.local",
+            "stylers": [
+                {
+                    "color": "#9a9a9a"
+                }
+            ]
+        },
+        {
+            "featureType": "road.local",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#616161"
+                }
+            ]
+        },
+        {
+            "featureType": "transit",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#757575"
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "geometry",
+            "stylers": [
+                {
+                    "color": "#6686FF"
+                }
+            ]
+        },
+        {
+            "featureType": "water",
+            "elementType": "labels.text.fill",
+            "stylers": [
+                {
+                    "color": "#3d3d3d"
+                }
+            ]
+        }
+    ]
+
+// Initialize Firebase
+const firebase = require('firebase');
+const firebaseConfig = {
+    apiKey: "AIzaSyDgqKzsdVgTX5h7MuY0Iq6PFsbndLTEpdY",
+    authDomain: "stroll-1e680.firebaseapp.com",
+    databaseURL: "https://stroll-1e680.firebaseio.com",
+    projectId: "stroll-1e680",
+    storageBucket: "stroll-1e680.appspot.com",
+    messagingSenderId: "457693989749"
+};
+const firebaseApp = firebase.initializeApp(firebaseConfig);
+global.firebaseRef = firebaseApp.database().ref().child('items');
+
+
+
+const LATITUDE_DELTA = 0.01;
+const LONGITUDE_DELTA = 0.01;
+
+
+
 
 TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, error }) => {
     console.log("--- IN GEOFENCING TASK ---");
@@ -34,6 +318,7 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
     }
 
 
+
     if (eventType === Location.GeofencingEventType.Enter) {
         console.log('GEO_TRACK_LOCATION - ENTER: ', region );
         queryFirebase(region.latitude, region.longitude);
@@ -43,47 +328,56 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
 });
 
 global.feed_items = [];
+global.marker_items = [];
+global.geofencingObjs = [];
 
+
+
+Array.prototype.unique = function() {
+  return this.filter(function (value, index, self) { 
+    return self.indexOf(value) === index;
+  });
+}
+
+var noteQueryObjs = [];
 global.queryFirebase = function queryFirebase(lat, long) {
-    //console.log(global.fireBaseRef);
+    //console.log(global.firebaseRef);
     
     // Query the DB based on the region
-    var query = global.fireBaseRef.orderByChild('latitude');
+    var query = global.firebaseRef.orderByChild('time');
 
     //console.log("--- QUERY RESULT ---");
     //console.log(query);
-    
-    query.once('value', function(snapshot) {
-        snapshot.forEach(function(child) {
-            if(child.val().location.latitude == lat && child.val().location.longitude == long)
-            {
-                //  May need to add a check here for if the item is already in the array
-                var noteObj = {
+
+    query.once('value', (snap) => {
+        // get all current notes
+        snap.forEach((child) => {
+            if (child.val().location.latitude == lat && child.val().location.longitude == long) {
+                var obj = {
                     title: child.val().title,
                     message: child.val().message,
                     location: child.val().location,
+                    time: child.val().time,
                     _key: child.key
                 };
-
-                console.log(global.feed_items.indexOf(noteObj));
-
-                if(global.feed_items.indexOf(noteObj) == -1){
-                    global.feed_items.push({
-                        title: child.val().title,
-                        message: child.val().message,
-                        location: child.val().location,
-                        _key: child.key
-                    }); 
-                }
-            }    
-            //console.log(child.key, child.val().location)
-        })
+                noteQueryObjs.push(obj);
+            }
+        });
     });
 
-    // global.feed_items.forEach(function(element) {
-    //     console.log(element);
-    // })
+    // remove duplicate notes
+    noteQueryObjs = noteQueryObjs.unique();
+    console.log(noteQueryObjs);
+    global.feed_items = noteQueryObjs;
+    //global.marker_items = noteQueryObjs;
+
+
+   // global.feed_items.forEach(function(element) {
+         //console.log(element);
+   // });
+    console.log("Total notes in feed: " + global.feed_items.length);
 };
+
 
 
 TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
@@ -98,11 +392,16 @@ TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
 
 
 
+
 class Toolbar extends Component {
+    map = null;
+
     constructor(props) {
         super(props);
 
         this.state = {
+            ready: false,
+            userLocation: {},
             addPinModalVisible: false,
             feedModalVisible: false,
             fontLoaded: false,
@@ -112,14 +411,24 @@ class Toolbar extends Component {
             noteTitle: '',
             noteMessage: '',
             noteLocation: { latitude: null, longitude: null },
-            notes: [],
             geofencingRegions: [],
         };
-
-
-        this.itemsRef = this.props.items;
-        global.fireBaseRef = this.itemsRef;
+        
+        //this.itemsRef = firebaseApp.database().ref().child('items');
     }
+
+
+    setRegion(region) {
+        if(this.state.ready) {
+          setTimeout(() => this.map.animateToRegion(region), 10);
+        }
+    }
+
+    onMapReady = (e) => {
+      if(!this.state.ready) {
+        this.setState({ready: true});
+      }
+    };
 
 //    async handleLocationUpdate({data, error}) {
 //         if(error) {
@@ -130,18 +439,44 @@ class Toolbar extends Component {
 //    }
 
     
-    async initializeBackgroundLocation(){
-        let isRegistered = await TaskManager.isTaskRegisteredAsync('BACKGROUND_LOCATION_UPDATES_TASK')
-        if (!isRegistered) await Location.startLocationUpdatesAsync('BACKGROUND_LOCATION_UPDATES_TASK', {
-            accuracy: Location.Accuracy.High,
-            /* after edit */
-            timeInterval: 2500,
-            distanceInterval: 2,
-        });
-    }
+
+
+
+    getCurrentPosition() {
+        try {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const region = {
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude,
+                latitudeDelta: LATITUDE_DELTA,
+                longitudeDelta: LONGITUDE_DELTA,
+              };
+                this.setRegion(region);
+                this.state.userLocation = { latitude: position.coords.latitude, longitude: position.coords.longitude };
+            },
+            (error) => {
+              Alert.alert("Error Loading Map");
+            }
+          );
+        } catch(e) {
+          alert(e.message || "");
+        }
+      };
+
+      async initializeBackgroundLocation(){
+          let isRegistered = await TaskManager.isTaskRegisteredAsync('BACKGROUND_LOCATION_UPDATES_TASK')
+          if (!isRegistered) await Location.startLocationUpdatesAsync('BACKGROUND_LOCATION_UPDATES_TASK', {
+              accuracy: Location.Accuracy.High,
+              /* after edit */
+              timeInterval: 2500,
+              distanceInterval: 2,
+          });
+      }
+
 
     async componentDidMount() {
-        
+        this.getCurrentPosition();
         this.initializeBackgroundLocation();
         this.listenForItems();
 
@@ -160,70 +495,30 @@ class Toolbar extends Component {
     }
 
     listenForItems() {
-        var items = [];
+        global.firebaseRef.on("value", function(snapshot) {
+            snapshot.forEach(function(child) {
+                var obj = {
+                      identifier: child.val().title + " " + child.key,
+                      latitude: child.val().location.latitude,
+                      longitude: child.val().location.longitude,
+                      radius: 0.5,
+                      notifyOnEnter: true,
+                      notifyOnExit: false
+                }
 
-        this.itemsRef.on('value', (snap) => {
-            // get all current notes
-            var geofencingObjs = [];
-            
-            snap.forEach((child) => {
-                items.push({
-                    title: child.val().title,
-                    message: child.val().message,
-                    location: child.val().location,
-                    _key: child.key
-                });
-
-                // console.log("Pushing LAT: " + child.val().location.latitude);
-                // console.log("Pushing LONG: " + child.val().location.longitude);
                 
-                geofencingObjs.push({
-                    latitude: child.val().location.latitude,
-                    longitude: child.val().location.longitude,
-                    radius: 0.5,
-                    notifyOnEnter: true,
-                    notifyOnExit: false
-                });
-            
-            });
+                global.geofencingObjs.push(obj);
+            })
 
-            // items.forEach(function(element) {
-            //     console.log(element);
-            // });
-
-            var combinedArray = [];
-            // comb.concat(locs);
-            // if(this.state.geofencingRegions.size != 0){
-            //     comb.concat(this.state.geofencingRegions);
-            // }
-
-            geofencingObjs.forEach(function(element) {
-                combinedArray.push(element);
-            });
-
-            this.state.geofencingRegions.forEach(function(element) {
-                combinedArray.push(element);
-            });
-            
-            this.setState({
-                notes: items.reverse()
-            });
-
-            this.setState({
-                geofencingRegions: combinedArray
-            });
-
-            // combinedArray.forEach(function(element) {
-            //     console.log(element);
-            // });
-            
-            
-            Location.startGeofencingAsync('GEO_TRACK_LOCATION', combinedArray);
-            //Location.stopGeofencingAsync('GEO_TRACK_LOCATION');
+            var geofenceUnique = global.geofencingObjs.unique();
+            console.log("Starting geofencing");
+            Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofenceUnique);
             if(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION')){
-                console.log("Geofencing Started");
+               console.log("Geofencing Started");
             }
         });
+
+
     }
 
 
@@ -242,7 +537,7 @@ class Toolbar extends Component {
     }
 
     setFeedModalVisible(visible) {
-        this.listenForItems();
+        //this.listenForItems();
         this.setState({ feedModalVisible: visible });
     }
 
@@ -269,9 +564,9 @@ class Toolbar extends Component {
             (position) => {
                 coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
                 console.log(coordinates);
-                this.itemsRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates });
+                global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: Date.now() });
             },
-            (error) => this.setState({ error: error.message }),
+            (error) => this.setState({ error: "ERROR UPLOADING NOTE: " + error.message }),
             { enableHighAccuracy: false, timeout: 20000 },
         )
         this.closeAddPinModal();
@@ -279,9 +574,55 @@ class Toolbar extends Component {
 
 
 
+
+
+
+
+
+
+
     render() {
+        const { region } = this.state;
+        const { children, renderMarker, markers } = this.props;
         return (
             <View>
+                <MapView
+                    provider="google"
+                    ref={ map => { this.map = map }}
+                    style={
+                        {
+                            height: '90%',
+                            width: '100%',
+                        }
+                    }
+                    customMapStyle={mapStyle}
+                    followsUserLocation={true}
+                    showsUserLocation={true}
+                    loadingEnabled={true}
+                    renderMarker={renderMarker}
+                    onMapReady={this.onMapReady}
+                    showsMyLocationButton={false}
+                    //onRegionChange={this.onRegionChange}
+                    //onRegionChangeComplete={this.onRegionChangeComplete}   
+                >
+                    {global.feed_items.map(item => (
+                        <MapView.Marker
+                            key={item._key}
+                            coordinate={item.location}
+                            title={item.title}
+                            description={item.message}
+                            onPress={() => {
+                                //this.toolbar.openNoteModal(marker.title, marker.message);
+                            }}
+                            image={pinImage}
+                        >
+                        </MapView.Marker>
+                    ))}
+
+                </MapView>
+
+
+
                 {/* Modal to add a new note/pin */}
                 <Modal
                     animationType="fade"
@@ -364,30 +705,30 @@ class Toolbar extends Component {
                                     style={feedModalStyle.closeIcon}
                                 />
                                 <ScrollView style={{height: '100%'}}>
-                                        {
-                                            global.feed_items.map((note, index) => {
-                                                return (
-                                                   <View style={{flex: 1}} key={index}>
-                                                    <Card key={index} style={feedModalStyle.cardStyle}>
-                                                        <CardItem
-                                                            style={feedModalStyle.cardItemStyle}
-                                                            button={true}
-                                                            onPress={() => {
-                                                                this.openNoteModal(note.title, note.message);
-                                                            }}>
-                                                            <Body>
-                                                                {this.state.fontLoaded == true ? (
-                                                                <Text style={feedModalStyle.cardTextStyle}>
-                                                                    {note.title}
-                                                                </Text> ) : null }
-                                                            </Body>
-                                                            <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
-                                                        </CardItem>
-                                                    </Card>
-                                                   </View>
-                                                )
-                                            })
-                                         }
+                                    {
+                                        global.feed_items.map((item) => {
+                                            return (
+                                               <View style={{flex: 1}} key={item._key}>
+                                                <Card key={item._key} style={feedModalStyle.cardStyle}>
+                                                    <CardItem
+                                                        style={feedModalStyle.cardItemStyle}
+                                                        button={true}
+                                                        onPress={() => {
+                                                            this.openNoteModal(item.title, item.message);
+                                                        }}>
+                                                        <Body>
+                                                            {this.state.fontLoaded == true ? (
+                                                            <Text style={feedModalStyle.cardTextStyle}>
+                                                                {item.title}
+                                                            </Text> ) : null }
+                                                        </Body>
+                                                        <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
+                                                    </CardItem>
+                                                </Card>
+                                               </View>
+                                            )
+                                        })
+                                     }
                                 </ScrollView>
                             </View>
                         </View>
