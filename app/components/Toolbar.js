@@ -339,7 +339,8 @@ Array.prototype.unique = function() {
   });
 }
 
-var noteQueryObjs = [];
+global.noteQueryObjs = [];
+
 global.queryFirebase = function queryFirebase(lat, long) {
     //console.log(global.firebaseRef);
     
@@ -349,7 +350,14 @@ global.queryFirebase = function queryFirebase(lat, long) {
     //console.log("--- QUERY RESULT ---");
     //console.log(query);
 
+    var childrenCount = 0;
+
+    query.on("child_added", function(snap) {
+      childrenCount++;
+    });
+
     query.once('value', (snap) => {
+        //console.log(childrenCount);
         // get all current notes
         snap.forEach((child) => {
             if (child.val().location.latitude == lat && child.val().location.longitude == long) {
@@ -360,16 +368,18 @@ global.queryFirebase = function queryFirebase(lat, long) {
                     time: child.val().time,
                     _key: child.key
                 };
-                noteQueryObjs.push(obj);
+
+                if (global.noteQueryObjs.length < childrenCount) {
+                    global.noteQueryObjs.push(obj);
+                }
             }
         });
     });
 
     // remove duplicate notes
-    noteQueryObjs = noteQueryObjs.unique();
-    console.log(noteQueryObjs);
+    global.noteQueryObjs = global.noteQueryObjs.unique();
     global.feed_items = noteQueryObjs;
-    //global.marker_items = noteQueryObjs;
+
 
 
    // global.feed_items.forEach(function(element) {
@@ -412,6 +422,7 @@ class Toolbar extends Component {
             noteMessage: '',
             noteLocation: { latitude: null, longitude: null },
             geofencingRegions: [],
+            markers: [],
         };
         
         //this.itemsRef = firebaseApp.database().ref().child('items');
@@ -494,8 +505,15 @@ class Toolbar extends Component {
         this.setState({fontLoaded: true})
     }
 
+    /*
     listenForItems() {
-        global.firebaseRef.on("value", function(snapshot) {
+        var childrenCount = 0;
+
+        global.firebaseRef.on("child_added", function(snap) {
+          childrenCount++;
+        });
+
+        global.firebaseRef.orderByChild('time').on("value", function(snapshot) {
             snapshot.forEach(function(child) {
                 var obj = {
                       identifier: child.val().title + " " + child.key,
@@ -505,9 +523,9 @@ class Toolbar extends Component {
                       notifyOnEnter: true,
                       notifyOnExit: false
                 }
-
-                
-                global.geofencingObjs.push(obj);
+                if (global.geofencingObjs.indexOf(obj) === -1) {
+                    global.geofencingObjs.push(obj);
+                }
             })
 
             var geofenceUnique = global.geofencingObjs.unique();
@@ -517,8 +535,60 @@ class Toolbar extends Component {
                console.log("Geofencing Started");
             }
         });
+    }
+    */
 
 
+    listenForItems() {
+
+        var childrenCount = 0;
+        var noteItems = [];
+
+        global.firebaseRef.on("child_added", function(snap) {
+           childrenCount++;
+        });
+
+        global.firebaseRef.on('value', (snap) => {
+            // get all current notes
+            snap.forEach((child) => {
+                var geofenceObj = {
+                      identifier: child.val().title + " " + child.key,
+                      latitude: child.val().location.latitude,
+                      longitude: child.val().location.longitude,
+                      radius: 0.5,
+                      notifyOnEnter: true,
+                      notifyOnExit: false
+                }
+
+                var noteObj = {
+                    title: child.val().title,
+                    message: child.val().message,
+                    location: child.val().location,
+                    time: child.val().time,
+                    _key: child.key
+                }
+
+                console.log("children: " + childrenCount);
+                if (global.geofencingObjs.length < childrenCount) {
+                    noteItems.push(noteObj);
+                    global.geofencingObjs.push(geofenceObj);
+                }
+            });
+
+
+            noteItems = noteItems.unique();
+
+            this.setState({
+                markers: noteItems
+            });
+
+            var geofence = global.geofencingObjs.unique();
+
+            Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofence);
+            if(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION')){
+                console.log("Geofencing Started");
+            }
+        });
     }
 
 
@@ -574,13 +644,6 @@ class Toolbar extends Component {
 
 
 
-
-
-
-
-
-
-
     render() {
         const { region } = this.state;
         const { children, renderMarker, markers } = this.props;
@@ -605,7 +668,7 @@ class Toolbar extends Component {
                     //onRegionChange={this.onRegionChange}
                     //onRegionChangeComplete={this.onRegionChangeComplete}   
                 >
-                    {global.feed_items.map(item => (
+                    {this.state.markers.map(item => (
                         <MapView.Marker
                             key={item._key}
                             coordinate={item.location}
@@ -705,30 +768,29 @@ class Toolbar extends Component {
                                     style={feedModalStyle.closeIcon}
                                 />
                                 <ScrollView style={{height: '100%'}}>
-                                    {
-                                        global.feed_items.map((item) => {
+                                    {global.feed_items.map((item) => {
                                             return (
                                                <View style={{flex: 1}} key={item._key}>
-                                                <Card key={item._key} style={feedModalStyle.cardStyle}>
-                                                    <CardItem
-                                                        style={feedModalStyle.cardItemStyle}
-                                                        button={true}
-                                                        onPress={() => {
-                                                            this.openNoteModal(item.title, item.message);
-                                                        }}>
-                                                        <Body>
-                                                            {this.state.fontLoaded == true ? (
-                                                            <Text style={feedModalStyle.cardTextStyle}>
-                                                                {item.title}
-                                                            </Text> ) : null }
-                                                        </Body>
-                                                        <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
-                                                    </CardItem>
-                                                </Card>
+                                                    <Card key={item._key} style={feedModalStyle.cardStyle}>
+                                                        <CardItem
+                                                            style={feedModalStyle.cardItemStyle}
+                                                            button={true}
+                                                            onPress={() => {
+                                                                this.openNoteModal(item.title, item.message);
+                                                            }}>
+                                                            <Body>
+                                                                {this.state.fontLoaded == true ? (
+                                                                <Text style={feedModalStyle.cardTextStyle}>
+                                                                    {item.title}
+                                                                </Text> ) : null }
+                                                            </Body>
+                                                            <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
+                                                        </CardItem>
+                                                    </Card>
                                                </View>
                                             )
-                                        })
-                                     }
+                                        })}
+                                     
                                 </ScrollView>
                             </View>
                         </View>
