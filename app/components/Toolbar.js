@@ -566,6 +566,9 @@ class Toolbar extends Component {
 
 
             global.marker_items = removeDuplicates(noteItems, "_key");
+            this.setState({
+                markers: global.marker_items
+            });
 
 
             var geofence = removeDuplicates(global.geofencingObjs, "identifier");
@@ -653,7 +656,7 @@ class Toolbar extends Component {
                     //onRegionChange={this.onRegionChange}
                     //onRegionChangeComplete={this.onRegionChangeComplete}   
                 >
-                    {global.marker_items.map(item => (
+                    {this.state.markers.map(item => (
                         <MapView.Marker
                             key={item._key}
                             coordinate={item.location}
