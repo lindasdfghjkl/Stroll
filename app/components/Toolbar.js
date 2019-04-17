@@ -321,7 +321,7 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
         console.log('GEO_TRACK_LOCATION - ENTER: ', region );
         queryFirebase(region.latitude, region.longitude);
     } else if (eventType === Location.GeofencingEventType.Exit) {
-       // console.log('GEO_TRACK_LOCATION - EXIT: ', region);
+       console.log('GEO_TRACK_LOCATION - EXIT: ', region);
     }
 });
 
@@ -362,9 +362,6 @@ global.queryFirebase = function queryFirebase(lat, long) {
     // Query the DB based on the region
     var query = global.firebaseRef.orderByChild('time');
 
-    //console.log("--- QUERY RESULT ---");
-    //console.log(query);
-
     var childrenCount = 0;
 
     query.on("child_added", function(snap) {
@@ -374,7 +371,6 @@ global.queryFirebase = function queryFirebase(lat, long) {
     query.once('value', (snap) => {
         console.log("firebaseRef snap from queryFirebase()");
 
-        //console.log(childrenCount);
         // get all current notes
         snap.forEach((child) => {
             if (child.val().location.latitude == lat && child.val().location.longitude == long) {
@@ -387,7 +383,6 @@ global.queryFirebase = function queryFirebase(lat, long) {
                 };
 
                 if (global.feed_items.length < childrenCount && global.feed_items.length < marker_items.length) {
-                //if (global.noteQueryObjs.length < childrenCount) {
                     global.noteQueryObjs.push(obj);
                 }
             }
@@ -395,16 +390,7 @@ global.queryFirebase = function queryFirebase(lat, long) {
     });
 
     // remove duplicate notes
-    //global.feed_items = noteQueryObjs.unique();
-    
-    //global.noteQueryObjs = removeDuplicates(global.noteQueryObjs, "_key");
     global.feed_items =  removeDuplicates(global.noteQueryObjs, "_key");
-
-
-   // global.feed_items.forEach(function(element) {
-         //console.log(element);
-
-   // });
     console.log("Total notes in feed: " + global.feed_items.length);
 };
 
@@ -443,9 +429,8 @@ class Toolbar extends Component {
             noteLocation: { latitude: null, longitude: null },
             geofencingRegions: [],
             markers: [],
+
         };
-        
-        //this.itemsRef = firebaseApp.database().ref().child('items');
     }
 
 
@@ -455,22 +440,12 @@ class Toolbar extends Component {
         }
     }
 
+
     onMapReady = (e) => {
       if(!this.state.ready) {
         this.setState({ready: true});
       }
     };
-
-//    async handleLocationUpdate({data, error}) {
-//         if(error) {
-//             console.log("ERROR");
-//         } else {
-//             console.log(data);
-//         }
-//    }
-
-    
-
 
 
     getCurrentPosition() {
@@ -495,6 +470,7 @@ class Toolbar extends Component {
         }
       };
 
+
       async initializeBackgroundLocation(){
           let isRegistered = await TaskManager.isTaskRegisteredAsync('BACKGROUND_LOCATION_UPDATES_TASK')
           if (!isRegistered) await Location.startLocationUpdatesAsync('BACKGROUND_LOCATION_UPDATES_TASK', {
@@ -505,9 +481,7 @@ class Toolbar extends Component {
           });
       }
 
-
-
-
+      
     async componentDidMount() {
         this.getCurrentPosition();
         this.initializeBackgroundLocation();
@@ -628,6 +602,17 @@ class Toolbar extends Component {
             { enableHighAccuracy: false, timeout: 20000 },
         )
         this.closeAddPinModal();
+    }
+
+    goToUserPosition() {
+        var userPos = {
+            latitude: this.state.userLocation.latitude,
+            longitude: this.state.userLocation.longitude,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+        }
+
+        this.setRegion(userPos);
     }
 
 
@@ -833,10 +818,17 @@ class Toolbar extends Component {
                             source={require('../../assets/icon-assets/unselected-home-2x.png')}
                         />
                     </TouchableHighlight>
-                    <Image
-                        style={toolbarStyle.feedIcon}
-                        source={require('../../assets/icon-assets/selected-find-my-loctaion-3x.png')}
-                    />
+                    <TouchableHighlight
+                        onPress={() => {
+                            this.goToUserPosition();
+                        }}
+                        style={toolbarStyle.buttonWrapper}
+                    >
+                        <Image
+                            style={toolbarStyle.feedIcon}
+                            source={require('../../assets/icon-assets/selected-find-my-loctaion-3x.png')}
+                        />
+                    </TouchableHighlight>
                     <TouchableHighlight
                         onPress={() => {
                             this.openAddPinModal();
