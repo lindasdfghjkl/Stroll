@@ -595,7 +595,7 @@ class Toolbar extends Component {
     }
 
     setFeedModalVisible(visible) {
-        this.listenForItems();
+        //this.listenForItems();
         this.setState({ feedModalVisible: visible });
     }
 
