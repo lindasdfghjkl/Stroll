@@ -307,7 +307,6 @@ const LONGITUDE_DELTA = 0.01;
 
 
 
-
 TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, error }) => {
     console.log("--- IN GEOFENCING TASK ---");
     if (error) {
@@ -316,7 +315,6 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
     } else {
         //console.log("NO GEOFENCING ERROR");
     }
-
 
 
     if (eventType === Location.GeofencingEventType.Enter) {
@@ -332,15 +330,32 @@ global.marker_items = [];
 global.geofencingObjs = [];
 
 
-
+// return array of only distnct values
 Array.prototype.unique = function() {
   return this.filter(function (value, index, self) { 
     return self.indexOf(value) === index;
   });
 }
 
-global.noteQueryObjs = [];
 
+
+function removeDuplicates(arr, prop){
+    const unique = arr
+          .map(e => e[prop])
+
+        // store the keys of the unique objects
+       .map((e, i, final) => final.indexOf(e) === i && i)
+
+       // eliminate the dead keys & store unique objects
+       .filter(e => arr[e]).map(e => arr[e]);
+
+      return unique;
+}
+
+
+
+
+global.noteQueryObjs = [];
 global.queryFirebase = function queryFirebase(lat, long) {
     //console.log(global.firebaseRef);
     
@@ -357,6 +372,8 @@ global.queryFirebase = function queryFirebase(lat, long) {
     });
 
     query.once('value', (snap) => {
+        console.log("firebaseRef snap from queryFirebase()");
+
         //console.log(childrenCount);
         // get all current notes
         snap.forEach((child) => {
@@ -369,7 +386,8 @@ global.queryFirebase = function queryFirebase(lat, long) {
                     _key: child.key
                 };
 
-                if (global.noteQueryObjs.length < childrenCount) {
+                if (global.feed_items.length < childrenCount && global.feed_items.length < marker_items.length) {
+                //if (global.noteQueryObjs.length < childrenCount) {
                     global.noteQueryObjs.push(obj);
                 }
             }
@@ -377,13 +395,15 @@ global.queryFirebase = function queryFirebase(lat, long) {
     });
 
     // remove duplicate notes
-    global.noteQueryObjs = global.noteQueryObjs.unique();
-    global.feed_items = noteQueryObjs;
-
+    //global.feed_items = noteQueryObjs.unique();
+    
+    //global.noteQueryObjs = removeDuplicates(global.noteQueryObjs, "_key");
+    global.feed_items =  removeDuplicates(global.noteQueryObjs, "_key");
 
 
    // global.feed_items.forEach(function(element) {
          //console.log(element);
+
    // });
     console.log("Total notes in feed: " + global.feed_items.length);
 };
@@ -486,6 +506,8 @@ class Toolbar extends Component {
       }
 
 
+
+
     async componentDidMount() {
         this.getCurrentPosition();
         this.initializeBackgroundLocation();
@@ -505,39 +527,6 @@ class Toolbar extends Component {
         this.setState({fontLoaded: true})
     }
 
-    /*
-    listenForItems() {
-        var childrenCount = 0;
-
-        global.firebaseRef.on("child_added", function(snap) {
-          childrenCount++;
-        });
-
-        global.firebaseRef.orderByChild('time').on("value", function(snapshot) {
-            snapshot.forEach(function(child) {
-                var obj = {
-                      identifier: child.val().title + " " + child.key,
-                      latitude: child.val().location.latitude,
-                      longitude: child.val().location.longitude,
-                      radius: 0.5,
-                      notifyOnEnter: true,
-                      notifyOnExit: false
-                }
-                if (global.geofencingObjs.indexOf(obj) === -1) {
-                    global.geofencingObjs.push(obj);
-                }
-            })
-
-            var geofenceUnique = global.geofencingObjs.unique();
-            console.log("Starting geofencing");
-            Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofenceUnique);
-            if(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION')){
-               console.log("Geofencing Started");
-            }
-        });
-    }
-    */
-
 
     listenForItems() {
 
@@ -549,6 +538,7 @@ class Toolbar extends Component {
         });
 
         global.firebaseRef.on('value', (snap) => {
+            console.log("firebaseRef snap from listenForItems()");
             // get all current notes
             snap.forEach((child) => {
                 var geofenceObj = {
@@ -568,22 +558,17 @@ class Toolbar extends Component {
                     _key: child.key
                 }
 
-                console.log("children: " + childrenCount);
-                if (global.geofencingObjs.length < childrenCount) {
-                    noteItems.push(noteObj);
+               if (global.marker_items.length < childrenCount) {
+                    noteItems.push(noteObj);  
                     global.geofencingObjs.push(geofenceObj);
                 }
             });
 
 
-            noteItems = noteItems.unique();
+            global.marker_items = removeDuplicates(noteItems, "_key");
 
-            this.setState({
-                markers: noteItems
-            });
 
-            var geofence = global.geofencingObjs.unique();
-
+            var geofence = removeDuplicates(global.geofencingObjs, "identifier");
             Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofence);
             if(Location.hasStartedGeofencingAsync('GEO_TRACK_LOCATION')){
                 console.log("Geofencing Started");
@@ -607,7 +592,7 @@ class Toolbar extends Component {
     }
 
     setFeedModalVisible(visible) {
-        //this.listenForItems();
+        this.listenForItems();
         this.setState({ feedModalVisible: visible });
     }
 
@@ -668,7 +653,7 @@ class Toolbar extends Component {
                     //onRegionChange={this.onRegionChange}
                     //onRegionChangeComplete={this.onRegionChangeComplete}   
                 >
-                    {this.state.markers.map(item => (
+                    {global.marker_items.map(item => (
                         <MapView.Marker
                             key={item._key}
                             coordinate={item.location}
