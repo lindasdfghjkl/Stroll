@@ -6,7 +6,7 @@ export default {
         borderColor: 'transparent',
         borderWidth: 0,
         justifyContent: 'space-between',
-        height: '30%',
+        height: '10%',
         flexDirection: 'row',
         paddingLeft: '6%',
         paddingRight: '6%',
