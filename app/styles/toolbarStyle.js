@@ -16,7 +16,11 @@ export default {
       feedIcon: {
           width: 35,
           height: 38,
+          marginTop: '3%',
           resizeMode: 'contain'
+      },
+      buttonWrapper: {
+        marginTop: '3%',
       }
       
 }

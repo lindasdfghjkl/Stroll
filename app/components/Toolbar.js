@@ -826,6 +826,7 @@ class Toolbar extends Component {
                         onPress={() => {
                             this.openFeedModal();
                         }}
+                        style={toolbarStyle.buttonWrapper}
                     >
                         <Image
                             style={toolbarStyle.feedIcon}
@@ -840,6 +841,7 @@ class Toolbar extends Component {
                         onPress={() => {
                             this.openAddPinModal();
                         }}
+                        style={toolbarStyle.buttonWrapper}
                     >
                         <Image
                             style={toolbarStyle.feedIcon}
