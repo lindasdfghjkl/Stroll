@@ -17,6 +17,9 @@ export default {
           width: 35,
           height: 38,
           resizeMode: 'contain'
+      },
+      buttonWrapper: {
+        marginTop: '3%',
       }
       
 }
