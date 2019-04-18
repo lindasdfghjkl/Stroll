@@ -5,7 +5,7 @@ export default {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#00000088', // Shadow the view behind the modal
+        backgroundColor: '#00000040', // Shadow the view behind the modal
 
       },
       modal: {

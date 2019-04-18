@@ -43,7 +43,10 @@ export default {
     paddingTop: 5,
     fontFamily: 'asap-regular',
     fontSize: 20,
-    textAlignVertical: 'center'
+    textAlignVertical: 'center',
+    color: '#222',
+    lineHeight: 24
+
   },
   date: {
     position:'absolute',
