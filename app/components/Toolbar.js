@@ -674,17 +674,18 @@ class Toolbar extends Component {
                 coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
                 console.log(coordinates);
                 global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: Date.now() });
+                this.closeAddPinModal();
+
             },
             (error) => this.setState({ error: "ERROR UPLOADING NOTE: " + error.message }),
             { enableHighAccuracy: false, timeout: 20000 },
         )
-        this.closeAddPinModal();
     }
 
     goToUserPosition() {
         var userPos = {
             latitude: this.state.userLocation.latitude,
-            longitude: this.sstate.userLocation.longitude,
+            longitude: this.state.userLocation.longitude,
             latitudeDelta: LATITUDE_DELTA,
             longitudeDelta: LONGITUDE_DELTA,
         }

@@ -10,7 +10,7 @@ export default {
       },
       modal: {
         width: '90%',
-        height: '55%',
+        height: '70%',
         backgroundColor: '#212121',
         paddingLeft: '6%',
         paddingRight: '6%',
@@ -46,7 +46,8 @@ export default {
         fontSize: 20
       },
       noteInput: {
-        height: '50%',
+        minHeight: '25%',
+        height: '60%',
         borderColor: '#6EEB93',
         color: 'white',
         borderWidth: 2,
@@ -57,6 +58,7 @@ export default {
         fontSize: 20
       },
       postIcon: {
+        bottom: '5%',
         alignSelf: 'flex-end',
         width: 35,
         height: 38,
