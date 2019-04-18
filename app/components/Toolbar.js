@@ -377,19 +377,17 @@ global.queryFirebase = function queryFirebase(lat, long) {
         console.log("Deleted note: " + deletedNote.title);
 
         global.noteQueryObjs.forEach(function(item) { 
-            try {
-               if (item._key == deletedNote._key) {
-                    global.noteQueryObjs.splice(global.noteQueryObjs.indexOf(item), 1);
-               }
-            } catch {}
+            if (item._key == deletedNote._key) {
+                try { global.noteQueryObjs.splice(global.noteQueryObjs.indexOf(item), 1);} 
+                catch {}
+            } 
         })
 
         global.feed_items.forEach(function(item) { 
-            try {
-               if (item._key == deletedNote._key) {
-                    global.feed_items.splice(global.feed_items.indexOf(item), 1);
-               }
-            } catch {}
+            if (item._key == deletedNote._key) {
+               try { global.feed_items.splice(global.feed_items.indexOf(item), 1); }
+               catch {}
+            } 
         })
         childrenCount--;
     });
@@ -510,17 +508,28 @@ class Toolbar extends Component {
           });
       }
 
+    async checkPermissions() {
+        const { Permissions } = Expo;
+        const { status: statusLoc, expires: expiresLoc, permissions: permissionsLoc } =  await Permissions.getAsync(Permissions.LOCATION);
+        if (statusLoc !== 'granted') {
+          const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
+          if (status !== 'granted') {
+              throw new Error('Location permission not granted');
+          }
+        } 
+
+        const { status: statusNot, expires: expiresNot, permissions: permissionsNot } = Permissions.getAsync(Permissions.NOTIFICATIONS);
+        if (statusNot !== 'granted') {
+          const { status, permissions } = Permissions.askAsync(Permissions.NOTIFICATIONS);
+        }
+    }
+
       
     async componentDidMount() {
+        this.checkPermissions();
         this.getCurrentPosition();
         this.initializeBackgroundLocation();
-
-        // get new items on map every x seconds
         this.listenForItems();
-
-
-
-
 
         await Font.loadAsync({
             'asap-bold': require('../../assets/fonts/Asap-Bold.ttf'),
@@ -541,7 +550,6 @@ class Toolbar extends Component {
         var noteItems = [];
         var childrenCount = 0;
        
-
         global.firebaseRef.on("child_added", function(snap) {
            childrenCount++;
         });
@@ -557,11 +565,10 @@ class Toolbar extends Component {
             console.log("Deleted note: " + deletedNote.title);
 
             global.marker_items.forEach(function(marker) { 
-                try {
-                   if (marker._key == deletedNote._key) {
-                        global.marker_items.splice(global.marker_items.indexOf(marker), 1);
-                   }
-                } catch {}
+                if (marker._key == deletedNote._key) {
+                    try { global.marker_items.splice(global.marker_items.indexOf(marker), 1); }
+                    catch {}
+                }
             })
 
             noteItems.forEach(function(note) { 
@@ -572,11 +579,10 @@ class Toolbar extends Component {
 
 
             global.geofencingObjs.forEach(function(item) { 
-                try {
-                   if (item._key == deletedNote._key) {
-                        global.geofencingObjs.splice(global.geofencingObjs.indexOf(item), 1);
-                   }
-                } catch {}
+               if (item._key == deletedNote._key) {
+                    try {global.geofencingObjs.splice(global.geofencingObjs.indexOf(item), 1); }
+                    catch {}
+               } 
             })
 
 
@@ -584,9 +590,9 @@ class Toolbar extends Component {
             //console.log(childrenCount);
         });
 
+
         global.firebaseRef.on('value', (snap) => {
             console.log("firebaseRef snap from listenForItems()");
-
 
             // get all current notes
             snap.forEach((child) => {
