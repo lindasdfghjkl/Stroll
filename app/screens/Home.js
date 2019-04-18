@@ -49,7 +49,6 @@ class Home extends Component {
     }
 
     async checkPermissions() {
-        const { Permissions } = Expo;
         const { status: statusLoc, expires: expiresLoc, permissions: permissionsLoc } =  await Permissions.getAsync(Permissions.LOCATION);
         if (statusLoc !== 'granted') {
           const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
