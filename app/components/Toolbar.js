@@ -19,10 +19,9 @@ import Marker from 'react-native-maps';
 import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
-import {Expo, Font, Permissions, TaskManager, Location} from 'expo';
+import {Expo, Font, TaskManager, Location} from 'expo';
 
 // Styles
-import styles from '../../styles.js';
 import toolbarStyle from '../styles/toolbarStyle';
 import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
@@ -423,17 +422,6 @@ global.queryFirebase = function queryFirebase(lat, long) {
 
 
 
-TaskManager.defineTask('BACKGROUND_LOCATION_UPDATES_TASK', ({data, error}) => {
-    console.log("--- IN LOCATION TASK ---");
-    if(error) {
-        console.log("ERROR");
-    } else {
-        //console.log(data);
-    }
-});
-
-
-
 
 
 class Toolbar extends Component {
@@ -498,37 +486,13 @@ class Toolbar extends Component {
       };
 
 
-      async initializeBackgroundLocation(){
-          let isRegistered = await TaskManager.isTaskRegisteredAsync('BACKGROUND_LOCATION_UPDATES_TASK')
-          if (!isRegistered) await Location.startLocationUpdatesAsync('BACKGROUND_LOCATION_UPDATES_TASK', {
-              accuracy: Location.Accuracy.High,
-              /* after edit */
-              timeInterval: 2500,
-              distanceInterval: 2,
-          });
-      }
 
-    async checkPermissions() {
-        const { Permissions } = Expo;
-        const { status: statusLoc, expires: expiresLoc, permissions: permissionsLoc } =  await Permissions.getAsync(Permissions.LOCATION);
-        if (statusLoc !== 'granted') {
-          const { status, permissions } = await Permissions.askAsync(Permissions.LOCATION);
-          if (status !== 'granted') {
-              throw new Error('Location permission not granted');
-          }
-        } 
 
-        const { status: statusNot, expires: expiresNot, permissions: permissionsNot } = Permissions.getAsync(Permissions.NOTIFICATIONS);
-        if (statusNot !== 'granted') {
-          const { status, permissions } = Permissions.askAsync(Permissions.NOTIFICATIONS);
-        }
-    }
+
 
       
     async componentDidMount() {
-        this.checkPermissions();
         this.getCurrentPosition();
-        this.initializeBackgroundLocation();
         this.listenForItems();
 
         await Font.loadAsync({
@@ -739,7 +703,7 @@ class Toolbar extends Component {
 
 
 
-                {/* Modal to add a new note/pin */}
+                {/* Modal to add a new note */}
                 <Modal
                     animationType="fade"
                     transparent={true}
