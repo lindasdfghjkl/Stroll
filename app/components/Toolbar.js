@@ -16,7 +16,6 @@ import {
   } from 'react-native';
 import MapView from 'react-native-maps';
 import Marker from 'react-native-maps';
-import { Button } from 'react-native-elements';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
 import {Expo, Font, TaskManager, Location} from 'expo';
@@ -415,6 +414,11 @@ global.queryFirebase = function queryFirebase(lat, long) {
 
 
     global.feed_items = removeDuplicates(noteQueryObjs, "_key");
+   // global.marker_items = global.feed_items;
+
+    global.toolbarRef.setState({
+        markers: global.feed_items,
+    })
 
     // remove duplicate notes
     console.log("Total notes in feed: " + global.feed_items.length);
@@ -423,7 +427,7 @@ global.queryFirebase = function queryFirebase(lat, long) {
 
 
 
-
+global.toolbarRef;
 class Toolbar extends Component {
     map = null;
 
@@ -492,6 +496,7 @@ class Toolbar extends Component {
 
       
     async componentDidMount() {
+        global.toolbarRef = this;
         this.getCurrentPosition();
         this.listenForItems();
 

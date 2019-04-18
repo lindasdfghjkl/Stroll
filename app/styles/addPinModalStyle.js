@@ -5,7 +5,8 @@ export default {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#00000080', // Shadow the view behind the modal
+        backgroundColor: '#00000088', // Shadow the view behind the modal
+
       },
       modal: {
         width: '90%',
@@ -45,7 +46,7 @@ export default {
         fontSize: 20
       },
       noteInput: {
-        height: '55%',
+        height: '50%',
         borderColor: '#6EEB93',
         color: 'white',
         borderWidth: 2,
