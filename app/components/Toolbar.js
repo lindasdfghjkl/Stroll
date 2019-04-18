@@ -451,7 +451,7 @@ class Toolbar extends Component {
             noteLocation: { latitude: null, longitude: null },
             geofencingRegions: [],
             markers: [],
-
+            feedScrollPosition: 0,
         };
     }
 
@@ -607,7 +607,12 @@ class Toolbar extends Component {
     openNoteModal(note) {
         this.setState({ noteIsOpen: true, noteTitle: title, noteMessage: message });
         this.setFeedModalVisible(false);
+    }   
+    closeNoteModal() {
+        this.setState({ noteIsOpen: false });
+        this.setState({ feedModalVisible: true });
     }
+
 
     viewNote(note) {
         this.setFeedModalVisible(false);
@@ -618,11 +623,6 @@ class Toolbar extends Component {
           longitudeDelta: LONGITUDE_DELTA
         };
         this.setRegion(region);
-    }
-
-    closeNoteModal() {
-        this.setState({ noteIsOpen: false });
-        this.setState({ feedModalVisible: true });
     }
 
     setAddPinModalVisible(visible) {
@@ -820,7 +820,25 @@ class Toolbar extends Component {
                                     onPress={() => {this.closeFeedModal(); }}
                                     style={feedModalStyle.closeIcon}
                                 />
-                                <ScrollView style={{height: '100%'}}>
+                                <ScrollView 
+                                  ref={feedScrollView => {
+                                    // check if this reference exists
+                                    if(feedScrollView !== null && this.feedScrollView !== feedScrollView){
+                                        this.feedScrollView = feedScrollView
+                                        feedScrollView.scrollTo({x: 0, y: this.state.feedScrollPosition, animated: false});
+                                    }}
+                                 }
+                                  style={{height: '100%'}} 
+                                  onScroll={event => { 
+                                    this.yOffset = event.nativeEvent.contentOffset.y;
+                                    this.setState({
+                                        feedScrollPosition: this.yOffset,
+                                    })
+                                    //console.log(this.state.feedScrollPosition);
+                                  }}
+                                  scrollEventThrottle={16}
+                                >
+                                
                                     {global.feed_items.map((item) => {
                                             return (
                                                <View style={{flex: 1}} key={item._key}>
@@ -832,6 +850,7 @@ class Toolbar extends Component {
                                                                 //this.openNoteModal(item.title, item.message);
                                                                 this.viewNote(item);
                                                                 this["marker" + item._key].showCallout();
+
                                                             }}>
                                                             <Body>
                                                                 {this.state.fontLoaded == true ? (
