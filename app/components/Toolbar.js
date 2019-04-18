@@ -28,8 +28,7 @@ import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
 import pinImage from '../../assets/icon-assets/big-note-green.png';
 import locatorImage from '../../assets/icon-assets/locator.png';
-const mapStyle =
-    [
+const mapStyle = [
         {
             "elementType": "geometry",
             "stylers": [
@@ -285,7 +284,8 @@ const mapStyle =
                 }
             ]
         }
-    ]
+      ]
+
 
 // Initialize Firebase
 const firebase = require('firebase');
@@ -306,6 +306,29 @@ const LATITUDE_DELTA = 0.01;
 const LONGITUDE_DELTA = 0.01;
 
 
+function removeDuplicates(arr, prop){
+    const unique = arr
+          .map(e => e[prop])
+
+        // store the keys of the unique objects
+       .map((e, i, final) => final.indexOf(e) === i && i)
+
+       // eliminate the dead keys & store unique objects
+       .filter(e => arr[e]).map(e => arr[e]);
+
+      return unique;
+}
+
+function removeFromArray(arr, obj) {
+    var index = arr.indexOf(obj);
+    if (index >= 0) {
+      arr.splice( index, 1 );
+    }
+    return arr;
+}
+
+
+
 
 TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, error }) => {
     console.log("--- IN GEOFENCING TASK ---");
@@ -321,41 +344,16 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
         console.log('GEO_TRACK_LOCATION - ENTER: ', region );
         queryFirebase(region.latitude, region.longitude);
     } else if (eventType === Location.GeofencingEventType.Exit) {
-       console.log('GEO_TRACK_LOCATION - EXIT: ', region);
+        console.log('GEO_TRACK_LOCATION - EXIT: ', region);
+        //queryFirebase(region.latitude, region.longitude);
     }
 });
 
 global.feed_items = [];
 global.marker_items = [];
 global.geofencingObjs = [];
-
-
-// return array of only distnct values
-Array.prototype.unique = function() {
-  return this.filter(function (value, index, self) { 
-    return self.indexOf(value) === index;
-  });
-}
-
-
-
-function removeDuplicates(arr, prop){
-    const unique = arr
-          .map(e => e[prop])
-
-        // store the keys of the unique objects
-       .map((e, i, final) => final.indexOf(e) === i && i)
-
-       // eliminate the dead keys & store unique objects
-       .filter(e => arr[e]).map(e => arr[e]);
-
-      return unique;
-}
-
-
-
-
 global.noteQueryObjs = [];
+
 global.queryFirebase = function queryFirebase(lat, long) {
     //console.log(global.firebaseRef);
     
@@ -364,15 +362,44 @@ global.queryFirebase = function queryFirebase(lat, long) {
 
     var childrenCount = 0;
 
-    query.on("child_added", function(snap) {
+    query.on("child_added", function(snapshot) {
       childrenCount++;
     });
 
-    query.once('value', (snap) => {
+    query.on("child_removed", function(snapshot) {
+        var deletedNote = {
+            title: snapshot.val().title,
+            message: snapshot.val().message,
+            location: snapshot.val().location,
+            time: snapshot.val().time,
+            _key: snapshot.key
+        }
+        console.log("Deleted note: " + deletedNote.title);
+
+        global.noteQueryObjs.forEach(function(item) { 
+            try {
+               if (item._key == deletedNote._key) {
+                    global.noteQueryObjs.splice(global.noteQueryObjs.indexOf(item), 1);
+               }
+            } catch {}
+        })
+
+        global.feed_items.forEach(function(item) { 
+            try {
+               if (item._key == deletedNote._key) {
+                    global.feed_items.splice(global.feed_items.indexOf(item), 1);
+               }
+            } catch {}
+        })
+        childrenCount--;
+    });
+
+    query.once('value', (snapshot) => {
         console.log("firebaseRef snap from queryFirebase()");
 
         // get all current notes
-        snap.forEach((child) => {
+        snapshot.forEach((child) => {
+
             if (child.val().location.latitude == lat && child.val().location.longitude == long) {
                 var obj = {
                     title: child.val().title,
@@ -384,13 +411,15 @@ global.queryFirebase = function queryFirebase(lat, long) {
 
                 if (global.feed_items.length < childrenCount && global.feed_items.length < marker_items.length) {
                     global.noteQueryObjs.push(obj);
-                }
+                } 
             }
         });
     });
 
+
+    global.feed_items = removeDuplicates(noteQueryObjs, "_key");
+
     // remove duplicate notes
-    global.feed_items =  removeDuplicates(global.noteQueryObjs, "_key");
     console.log("Total notes in feed: " + global.feed_items.length);
 };
 
@@ -485,7 +514,13 @@ class Toolbar extends Component {
     async componentDidMount() {
         this.getCurrentPosition();
         this.initializeBackgroundLocation();
+
+        // get new items on map every x seconds
         this.listenForItems();
+
+
+
+
 
         await Font.loadAsync({
             'asap-bold': require('../../assets/fonts/Asap-Bold.ttf'),
@@ -503,20 +538,60 @@ class Toolbar extends Component {
 
 
     listenForItems() {
-
-        var childrenCount = 0;
         var noteItems = [];
+        var childrenCount = 0;
+       
 
         global.firebaseRef.on("child_added", function(snap) {
            childrenCount++;
         });
 
+        global.firebaseRef.on("child_removed", function(snapshot) {
+            var deletedNote = {
+              title: snapshot.val().title,
+              message: snapshot.val().message,
+              location: snapshot.val().location,
+              time: snapshot.val().time,
+              _key: snapshot.key
+            }
+            console.log("Deleted note: " + deletedNote.title);
+
+            global.marker_items.forEach(function(marker) { 
+                try {
+                   if (marker._key == deletedNote._key) {
+                        global.marker_items.splice(global.marker_items.indexOf(marker), 1);
+                   }
+                } catch {}
+            })
+
+            noteItems.forEach(function(note) { 
+               if (note._key == deletedNote._key) {
+                    noteItems.splice(noteItems.indexOf(note), 1);
+               }
+            })
+
+
+            global.geofencingObjs.forEach(function(item) { 
+                try {
+                   if (item._key == deletedNote._key) {
+                        global.geofencingObjs.splice(global.geofencingObjs.indexOf(item), 1);
+                   }
+                } catch {}
+            })
+
+
+            childrenCount--;
+            //console.log(childrenCount);
+        });
+
         global.firebaseRef.on('value', (snap) => {
             console.log("firebaseRef snap from listenForItems()");
+
+
             // get all current notes
             snap.forEach((child) => {
                 var geofenceObj = {
-                      identifier: child.val().title + " " + child.key,
+                      identifier: child.val().title + child.key,
                       latitude: child.val().location.latitude,
                       longitude: child.val().location.longitude,
                       radius: 0.5,
@@ -532,10 +607,10 @@ class Toolbar extends Component {
                     _key: child.key
                 }
 
-               if (global.marker_items.length < childrenCount) {
+                if (global.marker_items.length < childrenCount) {
                     noteItems.push(noteObj);  
                     global.geofencingObjs.push(geofenceObj);
-                }
+                } 
             });
 
 
@@ -543,7 +618,6 @@ class Toolbar extends Component {
             this.setState({
                 markers: global.marker_items
             });
-
 
             var geofence = removeDuplicates(global.geofencingObjs, "identifier");
             Location.startGeofencingAsync('GEO_TRACK_LOCATION', geofence);
