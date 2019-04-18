@@ -16,6 +16,8 @@ import {
   } from 'react-native';
 import MapView from 'react-native-maps';
 import Marker from 'react-native-maps';
+import { Callout } from 'react-native-maps';
+
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
 import {Expo, Font, TaskManager, Location} from 'expo';
@@ -24,8 +26,12 @@ import {Expo, Font, TaskManager, Location} from 'expo';
 import toolbarStyle from '../styles/toolbarStyle';
 import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
+import mapCalloutStyle from '../styles/mapCalloutStyle';
 import pinImage from '../../assets/icon-assets/big-note-green.png';
 import locatorImage from '../../assets/icon-assets/locator.png';
+
+var LATITUDE_DELTA = 0.0025;
+const LONGITUDE_DELTA = 0.0025;
 const mapStyle = [
         {
             "elementType": "geometry",
@@ -300,8 +306,6 @@ global.firebaseRef = firebaseApp.database().ref().child('items');
 
 
 
-const LATITUDE_DELTA = 0.01;
-const LONGITUDE_DELTA = 0.01;
 
 
 function removeDuplicates(arr, prop){
@@ -343,7 +347,6 @@ TaskManager.defineTask('GEO_TRACK_LOCATION', ({ data: { eventType, region }, err
         queryFirebase(region.latitude, region.longitude);
     } else if (eventType === Location.GeofencingEventType.Exit) {
         console.log('GEO_TRACK_LOCATION - EXIT: ', region);
-        //queryFirebase(region.latitude, region.longitude);
     }
 });
 
@@ -405,17 +408,17 @@ global.queryFirebase = function queryFirebase(lat, long) {
                     _key: child.key
                 };
 
-                if (global.feed_items.length < childrenCount && global.feed_items.length < marker_items.length) {
+               // if (global.feed_items.length < childrenCount && global.feed_items.length < marker_items.length) {
                     global.noteQueryObjs.push(obj);
-                } 
+                //} 
             }
         });
     });
 
-
+    // set feed list
     global.feed_items = removeDuplicates(noteQueryObjs, "_key");
-   // global.marker_items = global.feed_items;
 
+    // set geofenced markers
     global.toolbarRef.setState({
         markers: global.feed_items,
     })
@@ -546,15 +549,13 @@ class Toolbar extends Component {
                }
             })
 
-
             global.geofencingObjs.forEach(function(item) { 
                if (item._key == deletedNote._key) {
                     try {global.geofencingObjs.splice(global.geofencingObjs.indexOf(item), 1); }
                     catch {}
                } 
             })
-
-
+            
             childrenCount--;
             //console.log(childrenCount);
         });
@@ -603,9 +604,20 @@ class Toolbar extends Component {
     }
 
 
-    openNoteModal(title, message) {
+    openNoteModal(note) {
         this.setState({ noteIsOpen: true, noteTitle: title, noteMessage: message });
         this.setFeedModalVisible(false);
+    }
+
+    viewNote(note) {
+        this.setFeedModalVisible(false);
+        const region = {
+          latitude: note.location.latitude + 0.00065,
+          longitude: note.location.longitude,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA
+        };
+        this.setRegion(region);
     }
 
     closeNoteModal() {
@@ -693,16 +705,35 @@ class Toolbar extends Component {
                     {this.state.markers.map(item => (
                         <MapView.Marker
                             key={item._key}
+                            ref={ref => { this["marker" + item._key] = ref; }}
                             coordinate={item.location}
                             title={item.title}
                             description={item.message}
                             onPress={() => {
                                 //this.toolbar.openNoteModal(marker.title, marker.message);
+                                this.viewNote(item);
                             }}
                             image={pinImage}
                         >
+
+                        <MapView.Callout key={item._key} style={{backgroundColor: 'transparent'}}> 
+                            <View style={mapCalloutStyle.container}>
+                                <View style={mapCalloutStyle.bubble}>
+                                    <View style={mapCalloutStyle.amount}>
+                                        {this.props.children}
+                                        <Text style={mapCalloutStyle.title}>{item.title}</Text>
+                                        <Text style={mapCalloutStyle.message}>{item.message}</Text>
+                                    </View>
+                                </View>
+                                <View style={mapCalloutStyle.arrowBorder} />
+                                <View style={mapCalloutStyle.arrow} />
+                            </View>
+                           
+                        </MapView.Callout>
+                   
                         </MapView.Marker>
                     ))}
+
 
                 </MapView>
 
@@ -798,7 +829,9 @@ class Toolbar extends Component {
                                                             style={feedModalStyle.cardItemStyle}
                                                             button={true}
                                                             onPress={() => {
-                                                                this.openNoteModal(item.title, item.message);
+                                                                //this.openNoteModal(item.title, item.message);
+                                                                this.viewNote(item);
+                                                                this["marker" + item._key].showCallout();
                                                             }}>
                                                             <Body>
                                                                 {this.state.fontLoaded == true ? (
