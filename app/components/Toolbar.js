@@ -28,6 +28,8 @@ import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
 import mapCalloutStyle from '../styles/mapCalloutStyle';
 import pinImage from '../../assets/icon-assets/big-note-green.png';
+import viewedPinImage from '../../assets/icon-assets/big-note-blue.png';
+
 import locatorImage from '../../assets/icon-assets/locator.png';
 
 var LATITUDE_DELTA = 0.0025;
@@ -526,6 +528,11 @@ class Toolbar extends Component {
            childrenCount++;
         });
 
+  
+        global.firebaseRef.on("child_changed", function(snap) {
+
+        });
+
         global.firebaseRef.on("child_removed", function(snapshot) {
             var deletedNote = {
               title: snapshot.val().title,
@@ -559,6 +566,7 @@ class Toolbar extends Component {
             childrenCount--;
             //console.log(childrenCount);
         });
+
 
 
         global.firebaseRef.on('value', (snap) => {
@@ -601,16 +609,6 @@ class Toolbar extends Component {
                 console.log("Geofencing Started");
             }
         });
-    }
-
-
-    openNoteModal(note) {
-        this.setState({ noteIsOpen: true, noteTitle: title, noteMessage: message });
-        this.setFeedModalVisible(false);
-    }   
-    closeNoteModal() {
-        this.setState({ noteIsOpen: false });
-        this.setState({ feedModalVisible: true });
     }
 
 
@@ -657,7 +655,7 @@ class Toolbar extends Component {
             (position) => {
                 coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
                 console.log(coordinates);
-                global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: Date.now() });
+                global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: this.formatDate(Date.now()) });
             },
             (error) => this.setState({ error: "ERROR UPLOADING NOTE: " + error.message }),
             { enableHighAccuracy: false, timeout: 20000 },
@@ -676,6 +674,16 @@ class Toolbar extends Component {
         this.setRegion(userPos);
     }
 
+
+
+    formatDate(datenow){
+        var date = new Date(datenow);
+        var options = {
+                year: 'numeric', month: 'numeric', day: 'numeric', hour: 'numeric', minute: 'numeric'
+            };
+        var result = date.toLocaleDateString('en', options);
+        return result;
+    }
 
 
     render() {
@@ -710,26 +718,25 @@ class Toolbar extends Component {
                             title={item.title}
                             description={item.message}
                             onPress={() => {
-                                //this.toolbar.openNoteModal(marker.title, marker.message);
                                 this.viewNote(item);
                             }}
                             image={pinImage}
                         >
 
-                        <MapView.Callout key={item._key} style={{backgroundColor: 'transparent'}}> 
-                            <View style={mapCalloutStyle.container}>
-                                <View style={mapCalloutStyle.bubble}>
-                                    <View style={mapCalloutStyle.amount}>
-                                        {this.props.children}
-                                        <Text style={mapCalloutStyle.title}>{item.title}</Text>
-                                        <Text style={mapCalloutStyle.message}>{item.message}</Text>
-                                    </View>
-                                </View>
-                                <View style={mapCalloutStyle.arrowBorder} />
+                            <MapView.Callout key={item._key} style={{backgroundColor: 'transparent'}}> 
+                                <View style={mapCalloutStyle.container}>
+                                    <View style={mapCalloutStyle.bubble}>
+                                        <View style={mapCalloutStyle.amount}>
+                                            {this.props.children}
+                                            <Text style={mapCalloutStyle.title}>{item.title}</Text>
+                                            <Text style={mapCalloutStyle.message}>{item.message}</Text>
+                                        </View>
+                                    </View>    
+                                    <View style={mapCalloutStyle.arrowBorder} />
                                 <View style={mapCalloutStyle.arrow} />
-                            </View>
-                           
-                        </MapView.Callout>
+                                    <Text style={mapCalloutStyle.date}>{item.time}</Text>
+                                </View>
+                            </MapView.Callout>
                    
                         </MapView.Marker>
                     ))}
@@ -825,9 +832,10 @@ class Toolbar extends Component {
                                     // check if this reference exists
                                     if(feedScrollView !== null && this.feedScrollView !== feedScrollView){
                                         this.feedScrollView = feedScrollView
+                                         // scroll to last position
                                         feedScrollView.scrollTo({x: 0, y: this.state.feedScrollPosition, animated: false});
                                     }}
-                                 }
+                                  }
                                   style={{height: '100%'}} 
                                   onScroll={event => { 
                                     this.yOffset = event.nativeEvent.contentOffset.y;
@@ -847,7 +855,6 @@ class Toolbar extends Component {
                                                             style={feedModalStyle.cardItemStyle}
                                                             button={true}
                                                             onPress={() => {
-                                                                //this.openNoteModal(item.title, item.message);
                                                                 this.viewNote(item);
                                                                 this["marker" + item._key].showCallout();
 
@@ -873,38 +880,7 @@ class Toolbar extends Component {
 
 
 
-                {/* note modal */}
-                <Modal
-                    animationType="slide"
-                    visible={this.state.noteIsOpen}
-                >
-                    <View style={feedModalStyle.modalContent}>
-                        <View style={feedModalStyle.modal}>
-                            <View>
-                                <Ionicons
-                                    name="ios-arrow-back"
-                                    color="#EFEFF4"
-                                    size={50}
-                                    onPress={() => { this.closeNoteModal(); }}
-                                    style={{ padding: '3%'}}
-                                />
-
-                                <ScrollView style={{ height: '100%' }}>
-                                    {this.state.fontLoaded == true ? (
-                                    <Text style={feedModalStyle.expandedFeedTitle}>
-                                        {this.state.noteTitle}
-                                    </Text> ) : null }
-                                    
-                                    {this.state.fontLoaded == true ? (
-                                    <Text style={feedModalStyle.expandedFeedText}>
-                                        {this.state.noteMessage}
-                                    </Text> ) : null }
-                                </ScrollView>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-
+            
 
                { /* Main Toolbar with two icons */}
                 <View style={toolbarStyle.navbar}>

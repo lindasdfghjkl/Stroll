@@ -44,5 +44,14 @@ export default {
     fontFamily: 'asap-regular',
     fontSize: 20,
     textAlignVertical: 'center'
+  },
+  date: {
+    position:'absolute',
+    bottom:5,
+    alignSelf:'flex-end',
+    fontFamily: 'asap-regular',
+    fontSize: 14,
+    textAlignVertical: 'center',
+    color: '#444'
   }
 }
