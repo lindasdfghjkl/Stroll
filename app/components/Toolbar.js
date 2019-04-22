@@ -747,13 +747,19 @@ class Toolbar extends Component {
                                     <View style={mapCalloutStyle.bubble}>
                                         <View style={mapCalloutStyle.amount}>
                                             {this.props.children}
-                                            <Text style={mapCalloutStyle.title}>{item.title}</Text>
-                                            <Text style={mapCalloutStyle.message}>{item.message}</Text>
+                                            {this.state.fontLoaded == true ? (
+                                                <Text style={mapCalloutStyle.title}>{item.title}</Text>
+                                            ) : null }
+                                            {this.state.fontLoaded == true ? (
+                                                <Text style={mapCalloutStyle.message}>{item.message}</Text>
+                                            ) : null }
                                         </View>
                                     </View>    
                                     <View style={mapCalloutStyle.arrowBorder} />
                                 <View style={mapCalloutStyle.arrow} />
-                                    <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
+                                    {this.state.fontLoaded == true ? (
+                                        <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
+                                    ) : null }
                                 </View>
                             </MapView.Callout>
                    
