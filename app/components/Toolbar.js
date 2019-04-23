@@ -31,6 +31,9 @@ import pinImage from '../../assets/icon-assets/big-note-green.png';
 import bluePinImage from '../../assets/icon-assets/big-note-blue.png';
 import pinkPinImage from '../../assets/icon-assets/big-note-pink.png';
 import locatorImage from '../../assets/icon-assets/locator.png';
+import greenChevron from '../../assets/icon-assets/green-chevron-right-3x.png';
+import blueChevron from '../../assets/icon-assets/blue-chevron-right-3x.png';
+import pinkChevron from '../../assets/icon-assets/pink-chevron-right-3x.png';
 
 var LATITUDE_DELTA = 0.0025;
 const LONGITUDE_DELTA = 0.0025;
@@ -721,6 +724,49 @@ class Toolbar extends Component {
         }
     }
 
+    /* Method to set the feed itme chevron color based on how old the note is */
+    getFeedItemColor(dateTime) {
+        var currentDateTime = Date.now();
+        var hoursOld = (currentDateTime - dateTime) / 3600000;
+
+        if(hoursOld >= 16 ) {
+            return pinkChevron;
+        } else if (hoursOld >= 8) {
+            return blueChevron;
+        } else {
+            return greenChevron;
+        }
+    }
+
+    /* Method to set the color of the callout title based on how old the note is */
+    getCalloutColorStyle(dateTime) {
+        var currentDateTime = Date.now();
+        var hoursOld = (currentDateTime - dateTime) / 3600000;
+
+        if(hoursOld >= 16 ) {
+            return {
+                fontFamily: 'asap-bold',
+                fontSize: 24,
+                textAlign: 'center',
+                color: '#FF32B1',
+            }
+        } else if (hoursOld >= 8) {
+            return {
+                fontFamily: 'asap-bold',
+                fontSize: 24,
+                textAlign: 'center',
+                color: '#4B73FF',
+            }
+        } else {
+            return {
+                fontFamily: 'asap-bold',
+                fontSize: 24,
+                textAlign: 'center',
+                color: '#4AE779',
+            }
+        }
+    }
+
 
     render() {
         const { region } = this.state;
@@ -765,7 +811,7 @@ class Toolbar extends Component {
                                         <View style={mapCalloutStyle.amount}>
                                             {this.props.children}
                                             {this.state.fontLoaded == true ? (
-                                                <Text style={mapCalloutStyle.title}>{item.title}</Text>
+                                                <Text style={this.getCalloutColorStyle(item.time)}>{item.title}</Text>
                                             ) : null }
                                             {this.state.fontLoaded == true ? (
                                                 <Text style={mapCalloutStyle.message}>{item.message}</Text>
@@ -779,7 +825,6 @@ class Toolbar extends Component {
                                     ) : null }
                                 </View>
                             </MapView.Callout>
-                   
                         </MapView.Marker>
                     ))}
 
@@ -890,6 +935,7 @@ class Toolbar extends Component {
                                 >
                                 
                                     {global.feed_items.map((item) => {
+                                            var imagePath = this.getFeedItemColor(item.time);
                                             return (
                                                <View style={{flex: 1}} key={item._key}>
                                                     <Card key={item._key} style={feedModalStyle.cardStyle}>
@@ -907,7 +953,10 @@ class Toolbar extends Component {
                                                                     {item.title}
                                                                 </Text> ) : null }
                                                             </Body>
-                                                            <Ionicons name="ios-arrow-forward" color="#4AE779" size={30} style={feedModalStyle.iconStyle} />
+                                                            <Image
+                                                                style={feedModalStyle.iconStyle}
+                                                                source={this.getFeedItemColor(item.time)}
+                                                            />
                                                         </CardItem>
                                                     </Card>
                                                </View>
