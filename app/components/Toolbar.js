@@ -28,7 +28,8 @@ import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
 import mapCalloutStyle from '../styles/mapCalloutStyle';
 import pinImage from '../../assets/icon-assets/big-note-green.png';
-import viewedPinImage from '../../assets/icon-assets/big-note-blue.png';
+import bluePinImage from '../../assets/icon-assets/big-note-blue.png';
+import pinkPinImage from '../../assets/icon-assets/big-note-pink.png';
 import locatorImage from '../../assets/icon-assets/locator.png';
 
 var LATITUDE_DELTA = 0.0025;
@@ -444,7 +445,7 @@ global.queryFirebase = function queryFirebase(lat, long) {
 
     // set geofenced markers
     global.toolbarRef.setState({
-        markers: global.feed_items,
+        markers: global.marker_items,  // reset this to global.feed_items if we want to show only the collected notes on the map
     })
 
     // remove duplicate notes
@@ -667,6 +668,7 @@ class Toolbar extends Component {
         this.setFeedModalVisible(true);
     }
 
+    /* Method to send a new note to the database */
     sendNoteToDB() {
         var coordinates = {};
         navigator.geolocation.getCurrentPosition(
@@ -682,6 +684,7 @@ class Toolbar extends Component {
         )
     }
 
+    /* Method to move the map view back to the user's current location */
     goToUserPosition() {
         var userPos = {
             latitude: this.state.userLocation.latitude,
@@ -694,7 +697,7 @@ class Toolbar extends Component {
     }
 
 
-
+    /* Method to format the date shown on a note's dialog */
     formatDate(datenow){
         var date = new Date(datenow);
         var options = {
@@ -702,6 +705,20 @@ class Toolbar extends Component {
             };
         var result = date.toLocaleDateString('en', options);
         return result;
+    }
+
+    /* Method to set the note color on the map based on how old the note is */
+    getNoteColor(dateTime) {
+        var currentDateTime = Date.now();
+        var hoursOld = (currentDateTime - dateTime) / 3600000;
+
+        if(hoursOld >= 16 ) {
+            return pinkPinImage;
+        } else if (hoursOld >= 8) {
+            return bluePinImage;
+        } else {
+            return pinImage;
+        }
     }
 
 
@@ -739,7 +756,7 @@ class Toolbar extends Component {
                             onPress={() => {
                                 this.viewNote(item);
                             }}
-                            image={pinImage}
+                            image={this.getNoteColor(item.time)}
                         >
 
                             <MapView.Callout key={item._key} style={{backgroundColor: 'transparent'}}> 
