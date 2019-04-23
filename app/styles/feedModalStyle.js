@@ -44,7 +44,10 @@ export default {
         height: 75,
       },
       iconStyle: {
-          padding: 10
+          padding: 10,
+          width: 20,
+          height: 30,
+          resizeMode: 'contain'
       },
       expandedFeedTitle: {
         fontFamily: 'asap-medium',
