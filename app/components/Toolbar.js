@@ -935,7 +935,6 @@ class Toolbar extends Component {
                                 >
                                 
                                     {global.feed_items.map((item) => {
-                                            var imagePath = this.getFeedItemColor(item.time);
                                             return (
                                                <View style={{flex: 1}} key={item._key}>
                                                     <Card key={item._key} style={feedModalStyle.cardStyle}>
