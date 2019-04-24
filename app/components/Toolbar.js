@@ -722,6 +722,26 @@ class Toolbar extends Component {
         }
     }
 
+    /* Calculate number of hours since note was posted */
+    calculateHours(dt2, dt1) 
+    {
+        var diff = (dt2 - dt1) / 1000;
+        diff /= (60 * 60);
+
+        diff = Math.abs(Math.round(diff));
+        if (diff >= 24) {
+          diff %= 24
+          if (diff > 1) {
+            return diff + "days ago"
+          } else {
+            return diff + "day ago"
+          }
+        } else {
+          return Math.abs(Math.round(diff)) + " hours ago";
+        }
+    }
+
+
     /* Method to set the feed itme chevron color based on how old the note is */
     getFeedItemColor(dateTime) {
         var currentDateTime = Date.now();
@@ -948,7 +968,16 @@ class Toolbar extends Component {
                                                                 {this.state.fontLoaded == true ? (
                                                                 <Text style={feedModalStyle.cardTextStyle}>
                                                                     {item.title}
-                                                                </Text> ) : null }
+                                                                </Text> 
+                                                                ) : null }
+
+                                                                {this.state.fontLoaded == true ? (
+                                                                <Text style={feedModalStyle.timestamp}>
+                                                                    {this.calculateHours(Date.now(), item.time)}
+                                                                </Text> 
+                                                                ) : null }
+                                                              
+                                                              
                                                             </Body>
                                                             <Image
                                                                 style={feedModalStyle.iconStyle}

@@ -5,7 +5,7 @@ export default {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#00000080', // Shadow the view behind the modal
+        backgroundColor: '#00000070', // Shadow the view behind the modal
       },
       modal: {
         width: '100%',
@@ -60,5 +60,15 @@ export default {
         color: 'white', 
         fontSize: 18, 
         lineHeight: 24
-      }
+      },
+      timestamp: {
+        color: '#EFEFF4',
+        fontSize: 14,
+        fontFamily: 'asap-regular',
+        textAlignVertical: 'center',
+        //alignSelf: 'flex-end',
+        height: 20,
+        bottom: 30,
+
+      },
 }
