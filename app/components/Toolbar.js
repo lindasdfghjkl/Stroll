@@ -728,7 +728,13 @@ class Toolbar extends Component {
         var diff = (dt2 - dt1) / 1000;
         diff /= (60 * 60);
 
-        diff = Math.abs(Math.round(diff));
+        if (diff < 1) {
+          return Math.round(diff * 60) + " minutes ago";
+        } else {
+          diff = Math.abs(Math.round(diff));
+        }
+
+        //diff = Math.abs(Math.round(diff));
         if (diff >= 24) {
           diff %= 24
           if (diff > 1) {
@@ -736,9 +742,9 @@ class Toolbar extends Component {
           } else {
             return diff + "day ago"
           }
-        } else {
+        } else if (diff < 24 && diff > 1) {
           return Math.abs(Math.round(diff)) + " hours ago";
-        }
+        } 
     }
 
 
