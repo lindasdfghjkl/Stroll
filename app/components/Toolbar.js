@@ -345,7 +345,7 @@ function removeDuplicates(arr, prop){
        // eliminate the dead keys & store unique objects
        .filter(e => arr[e]).map(e => arr[e]);
 
-      return unique;
+    return unique;
 }
 
 function removeFromArray(arr, obj) {
@@ -435,15 +435,13 @@ global.queryFirebase = function queryFirebase(lat, long) {
                     _key: child.key
                 };
 
-               // if (global.feed_items.length < childrenCount && global.feed_items.length < marker_items.length) {
-                    global.noteQueryObjs.push(obj);
-                //} 
+                global.noteQueryObjs.push(obj);
             }
         });
     });
 
     // set feed list
-    global.feed_items = removeDuplicates(noteQueryObjs, "_key");
+    global.feed_items = removeDuplicates(noteQueryObjs.reverse(), "_key");
 
 
     // set geofenced markers
@@ -480,6 +478,7 @@ class Toolbar extends Component {
             geofencingRegions: [],
             markers: [],
             feedScrollPosition: 0,
+            orderedFeedItems: [],
         };
     }
 
