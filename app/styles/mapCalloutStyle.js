@@ -3,7 +3,6 @@ export default {
   container: {
     flexDirection: 'column',
     alignSelf: 'flex-start',
-
   },
   bubble: {
     width: 200,
@@ -14,6 +13,7 @@ export default {
     paddingVertical: 10,
     borderColor: '#fefefe',
     borderWidth: 0.5,
+
   },
   amount: {
     flex: 1,

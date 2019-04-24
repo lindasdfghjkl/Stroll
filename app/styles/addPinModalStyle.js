@@ -5,11 +5,13 @@ export default {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#00000040', // Shadow the view behind the modal
+        backgroundColor: '#22222240', // Shadow the view behind the modal
 
       },
       modal: {
         width: '90%',
+        minHeight: '20%',
+        maxHeight: '100%',
         height: '70%',
         backgroundColor: '#212121',
         paddingLeft: '6%',
@@ -46,8 +48,8 @@ export default {
         fontSize: 20
       },
       noteInput: {
-        minHeight: '25%',
-        height: '60%',
+        minHeight: '15%',
+        height: '40%',
         borderColor: '#6EEB93',
         color: 'white',
         borderWidth: 2,
@@ -57,11 +59,40 @@ export default {
         fontFamily: 'asap-regular',
         fontSize: 20
       },
-      postIcon: {
+
+      buttonsView: {
+        flexDirection: 'row', 
+        justifyContent: 'space-between',
+        height: '5%',
         bottom: '5%',
-        alignSelf: 'flex-end',
+        paddingTop: 5
+      },
+      postIcon: {
         width: 35,
         height: 38,
-        resizeMode: 'contain'
+        margin: '3%',
+      },
+      selectImgIcon: {
+        width: 25,
+        height: 25,
+        margin: '3%',  
+      },
+      cameraIcon: {
+        width: 25,
+        height: 25,
+        margin: '3%',
+      },
+
+      imgThumb: {
+        width: 50, 
+        height: 50,
+        resizeMode: 'cover',
+
+      },
+      noThumb: {
+        width: 0, 
+        height: 50,
+        resizeMode: 'cover',
+
       }
 }

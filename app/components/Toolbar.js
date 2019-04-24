@@ -12,7 +12,8 @@ import {
     KeyboardAvoidingView,
     ScrollView,
     Image,
-    StyleSheet
+    StyleSheet,
+    Button
   } from 'react-native';
 import MapView from 'react-native-maps';
 import Marker from 'react-native-maps';
@@ -21,6 +22,7 @@ import { Callout } from 'react-native-maps';
 import { Ionicons } from '@expo/vector-icons';
 import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
 import {Expo, Font, TaskManager, Location} from 'expo';
+import { ImagePicker, Permissions } from 'expo';
 
 // Styles
 import toolbarStyle from '../styles/toolbarStyle';
@@ -400,6 +402,7 @@ global.queryFirebase = function queryFirebase(lat, long) {
             message: snapshot.val().message,
             location: snapshot.val().location,
             time: snapshot.val().time,
+            image: child.val().image,
             _key: snapshot.key
         }
         console.log("Deleted note: " + deletedNote.title);
@@ -432,6 +435,7 @@ global.queryFirebase = function queryFirebase(lat, long) {
                     message: child.val().message,
                     location: child.val().location,
                     time: child.val().time,
+                    image: child.val().image,
                     _key: child.key
                 };
 
@@ -452,6 +456,10 @@ global.queryFirebase = function queryFirebase(lat, long) {
     // remove duplicate notes
     console.log("Total notes in feed: " + global.feed_items.length);
 };
+
+
+
+
 
 
 
@@ -478,8 +486,49 @@ class Toolbar extends Component {
             geofencingRegions: [],
             markers: [],
             feedScrollPosition: 0,
+            selectedImage: false,
+            image: "",
+            noteImageExpanded: false,
+            expandedNoteImage: "",
         };
     }
+
+    _takePhoto = async () => {
+
+      let pickerResult = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        base64: true
+      });
+  
+      this._handleImagePicked(pickerResult);
+    };
+  
+    _pickImage = async () => {
+      let pickerResult = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        base64: true
+      });
+  
+      this._handleImagePicked(pickerResult);
+    };
+  
+    _handleImagePicked = async pickerResult => {
+      try {
+        if (!pickerResult.cancelled) {
+          var uploadStr = pickerResult.base64;
+          this.setState({ image: "data:image/jpeg;base64," + uploadStr });
+          this.setState({ selectedImage: true });
+          console.log("image uri: " + this.state.image)
+        }  else {
+          this.setState({ selectedImage: false });
+        }
+      } catch (e) {
+        console.log(e);
+        alert('Upload failed, sorry :(');
+      }
+    };
 
 
     setRegion(region) {
@@ -533,9 +582,14 @@ class Toolbar extends Component {
             'asap-semi-bold': require('../../assets/fonts/Asap-SemiBold.ttf'),
             'asap-semi-bold-italic': require('../../assets/fonts/Asap-SemiBoldItalic.ttf'),
         });
+
+        await Permissions.askAsync(Permissions.CAMERA_ROLL);
+        await Permissions.askAsync(Permissions.CAMERA);
         
         this.setState({fontLoaded: true})
     }
+
+    
 
 
     listenForItems() {
@@ -559,6 +613,7 @@ class Toolbar extends Component {
               message: snapshot.val().message,
               location: snapshot.val().location,
               time: snapshot.val().time,
+              image: child.val().image,
               _key: snapshot.key
             }
             console.log("Deleted note: " + deletedNote.title);
@@ -608,6 +663,7 @@ class Toolbar extends Component {
                     message: child.val().message,
                     location: child.val().location,
                     time: child.val().time,
+                    image: child.val().image,
                     _key: child.key
                 }
 
@@ -643,17 +699,23 @@ class Toolbar extends Component {
         this.setRegion(region);
     }
 
+    expandNoteImage(uri) {
+      this.setState({ expandedNoteImage: uri});
+      this.setState({ noteImageExpanded: true});
+      console.log("pressed thumb")
+    }
+
     setAddPinModalVisible(visible) {
         this.setState({ addPinModalVisible: visible });
     }
 
     setFeedModalVisible(visible) {
-        //this.listenForItems();
         this.setState({ feedModalVisible: visible });
     }
 
     closeAddPinModal() {
         this.setAddPinModalVisible(!this.state.addPinModalVisible);
+        this.setState({ selectedImage: false });
     }
 
     closeFeedModal() {
@@ -676,7 +738,7 @@ class Toolbar extends Component {
             (position) => {
                 coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
                 console.log(coordinates);
-                global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: Date.now() });
+                global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: Date.now(), image: this.state.image.replace("data:image/jpeg;base64,", "") });
                 this.closeAddPinModal();
 
             },
@@ -723,18 +785,17 @@ class Toolbar extends Component {
     }
 
     /* Calculate number of hours since note was posted */
-    calculateHours(dt2, dt1) 
-    {
+    calculateHours(dt2, dt1) {
+        // dt2 = current date, dt1 = time note was posted
         var diff = (dt2 - dt1) / 1000;
         diff /= (60 * 60);
 
         if (diff < 1) {
           return Math.round(diff * 60) + " minutes ago";
         } else {
-          diff = Math.abs(Math.round(diff));
+          diff = Math.round(diff);
         }
 
-        //diff = Math.abs(Math.round(diff));
         if (diff >= 24) {
           diff %= 24
           if (diff > 1) {
@@ -743,7 +804,7 @@ class Toolbar extends Component {
             return diff + "day ago"
           }
         } else if (diff < 24 && diff > 1) {
-          return Math.abs(Math.round(diff)) + " hours ago";
+          return Math.round(diff) + " hours ago";
         } 
     }
 
@@ -753,7 +814,7 @@ class Toolbar extends Component {
         var currentDateTime = Date.now();
         var hoursOld = (currentDateTime - dateTime) / 3600000;
 
-        if(hoursOld >= 16 ) {
+        if (hoursOld >= 16 ) {
             return pinkChevron;
         } else if (hoursOld >= 8) {
             return blueChevron;
@@ -829,11 +890,16 @@ class Toolbar extends Component {
                             image={this.getNoteColor(item.time)}
                         >
 
+
                             <MapView.Callout key={item._key} style={{backgroundColor: 'transparent'}}> 
+                                <Image  source={{ uri: "data:image/jpeg;base64," + item.image}}  style={{ width: '100%', minHeight: 200}}  resizeMode='contain'/>
+
                                 <View style={mapCalloutStyle.container}>
+
                                     <View style={mapCalloutStyle.bubble}>
                                         <View style={mapCalloutStyle.amount}>
                                             {this.props.children}
+                                            
                                             {this.state.fontLoaded == true ? (
                                                 <Text style={this.getCalloutColorStyle(item.time)}>{item.title}</Text>
                                             ) : null }
@@ -843,17 +909,17 @@ class Toolbar extends Component {
                                         </View>
                                     </View>    
                                     <View style={mapCalloutStyle.arrowBorder} />
-                                <View style={mapCalloutStyle.arrow} />
-                                    {this.state.fontLoaded == true ? (
-                                        <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
-                                    ) : null }
+                                    <View style={mapCalloutStyle.arrow} />
+                                        {this.state.fontLoaded == true ? (
+                                            <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
+                                        ) : null }
                                 </View>
                             </MapView.Callout>
                         </MapView.Marker>
                     ))}
-
-
                 </MapView>
+
+
 
 
 
@@ -876,7 +942,7 @@ class Toolbar extends Component {
                                     onPress={() => {
                                         this.closeAddPinModal();
                                     }}
-                                />
+                                />           
                             </View>
                             <TextInput
                                 style={addPinModalStyle.titleInput}
@@ -907,12 +973,34 @@ class Toolbar extends Component {
                                 keyboardAppearance={'dark'}
                                 keyboardDismissMode={'onDrag'}
                             />
-                            <TouchableHighlight style={{width: 35, height: 38, alignSelf: 'flex-end'}} onPress={() => { this.sendNoteToDB() }}>
-                                <Image
-                                    style={addPinModalStyle.postIcon}
-                                    source={require('../../assets/icon-assets/enabled-post-button-3x.png')}
-                                />
-                            </TouchableHighlight>
+                            {this.state.selectedImage ? 
+                                  <Image source={{ uri: this.state.image }} style={addPinModalStyle.imgThumb} /> 
+                                  : 
+                                  <Image source={require('../../assets/icon-assets/clearThumb.png')}  style={addPinModalStyle.noThumb}/> 
+                            }
+
+                            <View style={addPinModalStyle.buttonsView}>
+                                <TouchableHighlight style={addPinModalStyle.selectImgIcon} onPress={() => { this._pickImage() }}>
+                                    <Image
+                                        style={addPinModalStyle.postIcon}
+                                        source={require('../../assets/icon-assets/galleryIcon.png')}
+                                    />
+                                </TouchableHighlight>
+
+                                <TouchableHighlight style={addPinModalStyle.cameraIcon} onPress={() => { this._takePhoto() }}>
+                                    <Image
+                                        style={addPinModalStyle.postIcon}
+                                        source={require('../../assets/icon-assets/cameraIcon.png')}
+                                    />
+                                </TouchableHighlight>
+
+                                <TouchableHighlight style={addPinModalStyle.postIcon} onPress={() => { this.sendNoteToDB() }}>
+                                    <Image
+                                        style={addPinModalStyle.postIcon}
+                                        source={require('../../assets/icon-assets/enabled-post-button-3x.png')}
+                                    />
+                                </TouchableHighlight>
+                            </View>
                         </KeyboardAvoidingView>
                     </KeyboardAvoidingView>
                 </Modal>
@@ -968,7 +1056,6 @@ class Toolbar extends Component {
                                                             onPress={() => {
                                                                 this.viewNote(item);
                                                                 this["marker" + item._key].showCallout();
-
                                                             }}>
                                                             <Body>
                                                                 {this.state.fontLoaded == true ? (
