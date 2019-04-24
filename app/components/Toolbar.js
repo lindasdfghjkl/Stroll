@@ -478,7 +478,6 @@ class Toolbar extends Component {
             geofencingRegions: [],
             markers: [],
             feedScrollPosition: 0,
-            orderedFeedItems: [],
         };
     }
 
