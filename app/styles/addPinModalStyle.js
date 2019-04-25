@@ -10,9 +10,9 @@ export default {
       },
       modal: {
         width: '90%',
-        minHeight: '20%',
-        maxHeight: '100%',
-        height: '70%',
+        minHeight: '55%',
+        maxHeight: '90%',
+        height: '65%',
         backgroundColor: '#1a1821',
         paddingLeft: '6%',
         paddingRight: '6%',
@@ -49,7 +49,7 @@ export default {
       },
       noteInput: {
         minHeight: '15%',
-        height: '40%',
+        height: '35%',
         borderColor: '#6EEB93',
         color: 'white',
         borderWidth: 2,
@@ -64,7 +64,7 @@ export default {
         flexDirection: 'row', 
         justifyContent: 'space-between',
         height: '5%',
-        bottom: '5%',
+        bottom: 0,
         paddingTop: 5
       },
       postIcon: {
@@ -81,19 +81,18 @@ export default {
         width: 25,
         height: 25,
         margin: '3%',
-
       },
 
       imgThumb: {
-        width: 50, 
-        height: 50,
-        resizeMode: 'cover',
-
+        left: 0,
+        paddingLeft: '3%',
+        width: '15%',
+        height: '15%',
+        resizeMode: 'contain',
       },
       noThumb: {
-        width: 0, 
-        height: 50,
-        resizeMode: 'cover',
-
+        width: 0,
+        height: '15%',
+        resizeMode: 'contain',
       }
 }

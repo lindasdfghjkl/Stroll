@@ -5,7 +5,7 @@ export default {
     alignSelf: 'flex-start',
   },
   bubble: {
-    width: 200,
+    width: 275,
     flexDirection: 'row',
     alignSelf: 'flex-start',
     backgroundColor: '#fefefe',

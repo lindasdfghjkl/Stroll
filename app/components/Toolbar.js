@@ -31,7 +31,6 @@ import mapCalloutStyle from '../styles/mapCalloutStyle';
 import pinImage from '../../assets/icon-assets/big-note-green.png';
 import bluePinImage from '../../assets/icon-assets/big-note-blue.png';
 import pinkPinImage from '../../assets/icon-assets/big-note-pink.png';
-import locatorImage from '../../assets/icon-assets/locator.png';
 import greenChevron from '../../assets/icon-assets/green-chevron-right-3x.png';
 import blueChevron from '../../assets/icon-assets/blue-chevron-right-3x.png';
 import pinkChevron from '../../assets/icon-assets/pink-chevron-right-3x.png';
@@ -660,8 +659,16 @@ class Toolbar extends Component {
 
     viewNote(note) {
         this.setFeedModalVisible(false);
+        var delta = 0;
+        if (note.image != null) {
+          // slide the center down more to fit image
+          delta = 0.001
+        } else {
+          // does not have image
+          delta = 0.00065
+        }
         const region = {
-          latitude: note.location.latitude + 0.00065,
+          latitude: note.location.latitude + delta,
           longitude: note.location.longitude,
           latitudeDelta: LATITUDE_DELTA,
           longitudeDelta: LONGITUDE_DELTA
@@ -902,11 +909,12 @@ class Toolbar extends Component {
                             image={this.getNoteColor(item.time)}
                         >
 
-
+                            {/*popup for each note*/}
                             <MapView.Callout key={item._key} style={{backgroundColor: 'transparent'}}> 
-
+                            
+                                {/*check if the note has an image*/}
                                 {item.image != null ? (
-                                   <Image  source={{ uri: "data:image/jpeg;base64," + item.image}}  style={{ width: '100%', minHeight: 200}}  resizeMode='contain'/>
+                                   <Image  source={{ uri: "data:image/jpeg;base64," + item.image}}  style={{ width: '100%', minHeight: 275}}  resizeMode='contain'/>
                                 ) : null }
                                 
                                 <View style={mapCalloutStyle.container}>
