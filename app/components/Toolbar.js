@@ -43,7 +43,7 @@ const mapStyle = [
       "elementType": "geometry",
       "stylers": [
         {
-          "color": "#2c3138"
+          "color": "#3a3644" //buildings
         }
       ]
     },
@@ -94,6 +94,15 @@ const mapStyle = [
       "stylers": [
         {
           "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi",
+      "elementType": "geometry",
+      "stylers": [
+        {
+          "color": "#2a2733" //main bg
         }
       ]
     },
@@ -184,7 +193,7 @@ const mapStyle = [
       "elementType": "geometry",
       "stylers": [
         {
-          "color": "#42435e"
+          "color": "#201d28"
         }
       ]
     },

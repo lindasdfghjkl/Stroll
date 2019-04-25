@@ -5,7 +5,7 @@ export default {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#22222240', // Shadow the view behind the modal
+        backgroundColor: 'rgba(47, 42, 55, 0.85)', // Shadow the view behind the modal
 
       },
       modal: {
@@ -13,7 +13,7 @@ export default {
         minHeight: '20%',
         maxHeight: '100%',
         height: '70%',
-        backgroundColor: '#212121',
+        backgroundColor: '#1a1821',
         paddingLeft: '6%',
         paddingRight: '6%',
         paddingBottom: '6%',

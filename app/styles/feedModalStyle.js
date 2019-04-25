@@ -5,13 +5,13 @@ export default {
         flexDirection: 'column',
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#00000070', // Shadow the view behind the modal
+        backgroundColor: 'rgba(47, 42, 55, 0.85)', // Shadow the view behind the modal
       },
       modal: {
         width: '100%',
         height: '100%',
         marginTop: '40%',
-        backgroundColor: '#212121',
+        backgroundColor: '#1a1821',
         paddingLeft: '6%',
         paddingRight: '6%',
         paddingBottom: '6%',
@@ -22,7 +22,7 @@ export default {
         padding: '3%'
       },
       cardStyle: {
-          backgroundColor: '#4D4D4D',
+          backgroundColor: '#4e4c51',
           borderRadius: 10,
           borderColor: '#4D4D4D',
           marginBottom: '5%',
@@ -31,7 +31,7 @@ export default {
           //justifyContent: 'center'
       },
       cardItemStyle: {
-        backgroundColor: '#4D4D4D',
+        backgroundColor: '#4e4c51',
         borderRadius: 10,
         height: 75,
 
