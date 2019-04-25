@@ -55,7 +55,7 @@ export default {
         borderWidth: 2,
         borderRadius: 10,
         padding: '3%',
-        marginBottom: '5%',
+        marginBottom: '2%',
         fontFamily: 'asap-regular',
         fontSize: 20
       },
@@ -81,6 +81,7 @@ export default {
         width: 25,
         height: 25,
         margin: '3%',
+
       },
 
       imgThumb: {
