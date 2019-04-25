@@ -10,9 +10,9 @@ export default {
       },
       modal: {
         width: '90%',
-        minHeight: '55%',
+        minHeight: '50%',
         maxHeight: '90%',
-        height: '65%',
+        height: '70%',
         backgroundColor: '#1a1821',
         paddingLeft: '6%',
         paddingRight: '6%',
@@ -48,8 +48,8 @@ export default {
         fontSize: 20
       },
       noteInput: {
-        minHeight: '15%',
-        height: '35%',
+        minHeight: '30%',
+        height: '30%',
         borderColor: '#6EEB93',
         color: 'white',
         borderWidth: 2,
@@ -63,24 +63,24 @@ export default {
       buttonsView: {
         flexDirection: 'row', 
         justifyContent: 'space-between',
-        height: '5%',
-        bottom: 0,
-        paddingTop: 5
+        height: '3%',
+        bottom: '2%',
+        paddingTop: 0
       },
       postIcon: {
         width: 35,
         height: 38,
-        margin: '3%',
+        //margin: '3%',
       },
       selectImgIcon: {
         width: 25,
         height: 25,
-        margin: '3%',  
+       // margin: '3%',  
       },
       cameraIcon: {
         width: 25,
         height: 25,
-        margin: '3%',
+       // margin: '3%',
       },
 
       imgThumb: {
