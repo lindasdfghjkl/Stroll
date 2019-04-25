@@ -13,7 +13,6 @@ import {
     ScrollView,
     Image,
     StyleSheet,
-    Button
   } from 'react-native';
 import MapView from 'react-native-maps';
 import Marker from 'react-native-maps';
@@ -738,7 +737,13 @@ class Toolbar extends Component {
             (position) => {
                 coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
                 console.log(coordinates);
-                global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: Date.now(), image: this.state.image.replace("data:image/jpeg;base64,", "") });
+                var image = "";
+                if (this.state.selectedImage == false) {
+                  image = null;
+                } else {
+                  image = this.state.image.replace("data:image/jpeg;base64,", "")
+                }
+                global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: Date.now(), image: image });
                 this.closeAddPinModal();
 
             },
@@ -892,10 +897,12 @@ class Toolbar extends Component {
 
 
                             <MapView.Callout key={item._key} style={{backgroundColor: 'transparent'}}> 
-                                <Image  source={{ uri: "data:image/jpeg;base64," + item.image}}  style={{ width: '100%', minHeight: 200}}  resizeMode='contain'/>
 
+                                {item.image != null ? (
+                                   <Image  source={{ uri: "data:image/jpeg;base64," + item.image}}  style={{ width: '100%', minHeight: 200}}  resizeMode='contain'/>
+                                ) : null }
+                                
                                 <View style={mapCalloutStyle.container}>
-
                                     <View style={mapCalloutStyle.bubble}>
                                         <View style={mapCalloutStyle.amount}>
                                             {this.props.children}

@@ -38,6 +38,7 @@
         "NSLocationAlwaysAndWhenInUseUsageDescription": "This app uses location to track if a user passes a note and where they are if they post one.",
         "NSLocationAlwaysUsageDescription": "This app uses location to track if a user passes a note and where they are if they post one."
       }
-    }
+    },
+    "description": ""
   }
 }
