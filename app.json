@@ -14,7 +14,7 @@
     "splash": {
       "image": "./assets/StrollSplash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#1a1821"
+      "backgroundColor": "#282533"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
