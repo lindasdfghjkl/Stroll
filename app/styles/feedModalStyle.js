@@ -38,10 +38,11 @@ export default {
       },
       cardTextStyle: {
         color: '#EFEFF4',
-        fontSize: 24,
+        fontSize: 22,
         fontFamily: 'asap-regular',
         textAlignVertical: 'center',
         height: 75,
+        lineHeight: 22.5
       },
       iconStyle: {
           padding: 10,
@@ -68,7 +69,7 @@ export default {
         textAlignVertical: 'center',
         //alignSelf: 'flex-end',
         height: 20,
-        bottom: 30,
+        bottom: 25,
 
       },
 }

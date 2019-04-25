@@ -971,7 +971,7 @@ class Toolbar extends Component {
                                 value={this.state.titleValue}
                                 multiline={false}
                                 keyboardAppearance={'dark'}
-                                maxLength={60} // maximum charachters
+                                maxLength={55} // maximum charachters
                             />
                             <TextInput
                                 style={addPinModalStyle.noteInput}
