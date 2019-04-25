@@ -492,44 +492,6 @@ class Toolbar extends Component {
         };
     }
 
-    _takePhoto = async () => {
-
-      let pickerResult = await ImagePicker.launchCameraAsync({
-        allowsEditing: true,
-        aspect: [1, 1],
-        base64: true
-      });
-  
-      this._handleImagePicked(pickerResult);
-    };
-  
-    _pickImage = async () => {
-      let pickerResult = await ImagePicker.launchImageLibraryAsync({
-        allowsEditing: true,
-        aspect: [1, 1],
-        base64: true
-      });
-  
-      this._handleImagePicked(pickerResult);
-    };
-  
-    _handleImagePicked = async pickerResult => {
-      try {
-        if (!pickerResult.cancelled) {
-          var uploadStr = pickerResult.base64;
-          this.setState({ image: "data:image/jpeg;base64," + uploadStr });
-          this.setState({ selectedImage: true });
-          console.log("image uri: " + this.state.image)
-        }  else {
-          this.setState({ selectedImage: false });
-        }
-      } catch (e) {
-        console.log(e);
-        alert('Upload failed, sorry :(');
-      }
-    };
-
-
     setRegion(region) {
         if(this.state.ready) {
           setTimeout(() => this.map.animateToRegion(region), 10);
@@ -564,7 +526,7 @@ class Toolbar extends Component {
         } catch(e) {
           alert(e.message || "");
         }
-      };
+    };
 
     async componentDidMount() {
         global.toolbarRef = this;
@@ -751,6 +713,42 @@ class Toolbar extends Component {
             { enableHighAccuracy: false, timeout: 20000 },
         )
     }
+
+    takePhoto = async () => {
+      let pickerResult = await ImagePicker.launchCameraAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        base64: true
+      });
+  
+      this.handleImagePicked(pickerResult);
+    };
+  
+    pickImage = async () => {
+      let pickerResult = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [1, 1],
+        base64: true
+      });
+  
+      this.handleImagePicked(pickerResult);
+    };
+  
+    handleImagePicked = async pickerResult => {
+      try {
+        if (!pickerResult.cancelled) {
+          var uploadStr = pickerResult.base64;
+          this.setState({ image: "data:image/jpeg;base64," + uploadStr });
+          this.setState({ selectedImage: true });
+          console.log("image uri: " + this.state.image)
+        }  else {
+          this.setState({ selectedImage: false });
+        }
+      } catch (e) {
+        console.log(e);
+        alert('Upload failed, sorry :(');
+      }
+    };
 
     /* Method to move the map view back to the user's current location */
     goToUserPosition() {
@@ -964,7 +962,7 @@ class Toolbar extends Component {
                                 value={this.state.titleValue}
                                 multiline={false}
                                 keyboardAppearance={'dark'}
-                                maxLength={30} // maximum charachters
+                                maxLength={60} // maximum charachters
                             />
                             <TextInput
                                 style={addPinModalStyle.noteInput}
@@ -980,21 +978,24 @@ class Toolbar extends Component {
                                 keyboardAppearance={'dark'}
                                 keyboardDismissMode={'onDrag'}
                             />
+
+                            {/* image thumbnail */}
                             {this.state.selectedImage ? 
                                   <Image source={{ uri: this.state.image }} style={addPinModalStyle.imgThumb} /> 
                                   : 
                                   <Image source={require('../../assets/icon-assets/clearThumb.png')}  style={addPinModalStyle.noThumb}/> 
                             }
 
+                            {/* upload buttons */}
                             <View style={addPinModalStyle.buttonsView}>
-                                <TouchableHighlight style={addPinModalStyle.selectImgIcon} onPress={() => { this._pickImage() }}>
+                                <TouchableHighlight style={addPinModalStyle.selectImgIcon} onPress={() => { this.pickImage() }}>
                                     <Image
                                         style={addPinModalStyle.postIcon}
                                         source={require('../../assets/icon-assets/galleryIcon.png')}
                                     />
                                 </TouchableHighlight>
 
-                                <TouchableHighlight style={addPinModalStyle.cameraIcon} onPress={() => { this._takePhoto() }}>
+                                <TouchableHighlight style={addPinModalStyle.cameraIcon} onPress={() => { this.takePhoto() }}>
                                     <Image
                                         style={addPinModalStyle.postIcon}
                                         source={require('../../assets/icon-assets/cameraIcon.png')}
