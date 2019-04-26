@@ -17,7 +17,7 @@ export default {
   amount: {
     flex: 1,
   },
-
+  
   title: {
     fontFamily: 'asap-bold',
     fontSize: 24,
@@ -30,18 +30,19 @@ export default {
     textAlignVertical: 'center',
     color: '#222',
     lineHeight: 24,
-    paddingBottom: 10
+    marginBottom: 15,
   },
   tagsView: {
     flex: 1,
     flexDirection: 'row',
-    bottom: 15,
-    alignSelf:'flex-end',
+    bottom: 0,
+   // alignSelf:'flex-end',
+    left: 0,
   },
   tag: {
     overflow: 'hidden',
-    flexDirection: 'column',
-    marginLeft: 6,
+    flexDirection: 'row',
+    marginLeft: 4,
     padding: 4,
     color: 'white',
     fontSize: 14,
@@ -50,19 +51,21 @@ export default {
     height: 20,
     borderRadius: 3,
   },
+  timeView: {
+    flex: 1,
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    color: '#444',
+    height: 20,
+    width: '100%'
+  },
   date: {
-    bottom: 5,
-    alignSelf:'flex-end',
+   // position: 'absolute',
+    height: 20,
     fontFamily: 'asap-regular',
     fontSize: 14,
-    textAlignVertical: 'center',
-    color: '#444'
-  },
-  report: {
-    bottom:0,
-    left: 0,
-    height: 20,
-    width: 20,
-    resizeMode: 'contain'
+    color: '#444',
+    justifyContent: 'center',
+    alignItems: 'center',
   }
 }

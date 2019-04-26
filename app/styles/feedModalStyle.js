@@ -26,7 +26,7 @@ export default {
           borderRadius: 10,
           borderColor: '#4D4D4D',
           marginBottom: '5%',
-          height: 85,
+          height: 100,
           //alignItems: 'center',
           //justifyContent: 'center'
       },
@@ -38,11 +38,11 @@ export default {
       },
       cardTextStyle: {
         color: '#EFEFF4',
-        fontSize: 22,
+        fontSize: 20,
         fontFamily: 'asap-regular',
-        textAlignVertical: 'center',
+        textAlignVertical: 'bottom',
         height: 75,
-        lineHeight: 22.5
+        lineHeight: 22
       },
       iconStyle: {
           padding: 10,
@@ -68,7 +68,7 @@ export default {
         fontFamily: 'asap-regular',
         textAlignVertical: 'center',
         height: 20,
-        bottom: 25,
+        bottom: 10,
       },
       tagsView: {
         flex: 1,
@@ -81,12 +81,12 @@ export default {
         flexDirection: 'column',
         marginRight: 6,
         padding: 4,
-        color: 'white',
+        color: '#ffffff',
         fontSize: 14,
         fontFamily: 'asap-regular',
         textAlignVertical: 'center',
         height: 20,
         borderRadius: 3,
-        bottom: 40,
+        bottom: 25,
       },
 }

@@ -504,7 +504,7 @@ class Toolbar extends Component {
             image: "",
         };
 
-        this.colors = ['#4ae779', '#ff5dbb', '#6686ff']
+        this.tagColors = ['#946ae8', '#ff5dbb', '#6686ff']
     }
 
     setRegion(region) {
@@ -948,22 +948,22 @@ class Toolbar extends Component {
                                                   <Text style={mapCalloutStyle.message}>{item.message}</Text>
                                               ) : null }
                                           </View>
-                                    </View>             
+                                    </View>   
                                     <View style={mapCalloutStyle.tagsView}>
                                     {this.state.fontLoaded == true && item.tags.length >= 1 && item.tags[0] != '' ? 
                                       item.tags.map((tag) => {
                                         return  (<Text key={item.tags.indexOf(tag) + Math.random(100000)} 
                                                         // cycle through colors for tag bg
-                                                        style={[mapCalloutStyle.tag, {backgroundColor: this.colors[item.tags.indexOf(tag) % this.colors.length]}]}> 
+                                                        style={[mapCalloutStyle.tag, {backgroundColor: this.tagColors[item.tags.indexOf(tag) % this.tagColors.length]}]}> 
                                                         {tag}
                                                   </Text>
                                         )})
                                       : null }
                                     </View>
-        
                                     {this.state.fontLoaded == true ? (
-                                        <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
-                                    ) : null }
+                                          <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
+                                      ) : null }
+
                                 </View>
                             </MapView.Callout>
                         </MapView.Marker>
@@ -1137,7 +1137,7 @@ class Toolbar extends Component {
                                                                     return  (
                                                                       <Text key={item.tags.indexOf(tag) + Math.random(100000)} 
                                                                             // cycle through colors for tag bg
-                                                                            style={[feedModalStyle.tag, {backgroundColor: this.colors[item.tags.indexOf(tag) % this.colors.length]}]}> 
+                                                                            style={[feedModalStyle.tag, {backgroundColor: this.tagColors[item.tags.indexOf(tag) % this.tagColors.length]}]}> 
                                                                               {tag}
                                                                       </Text>
                                                                     )
