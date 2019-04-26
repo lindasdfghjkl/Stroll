@@ -26,11 +26,11 @@ export default {
   message: {
     paddingTop: 5,
     fontFamily: 'asap-regular',
-    fontSize: 20,
+    fontSize: 16,
     textAlignVertical: 'center',
     color: '#222',
-    lineHeight: 24,
-    marginBottom: 15,
+    lineHeight: 20,
+    marginBottom: 10,
   },
   tagsView: {
     flex: 1,

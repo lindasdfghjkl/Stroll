@@ -37,12 +37,13 @@ export default {
 
       },
       cardTextStyle: {
+        // message title
         color: '#EFEFF4',
-        fontSize: 20,
+        fontSize: 18,
         fontFamily: 'asap-regular',
         textAlignVertical: 'bottom',
         height: 75,
-        lineHeight: 22
+        lineHeight: 20
       },
       iconStyle: {
           padding: 10,
@@ -89,4 +90,12 @@ export default {
         borderRadius: 3,
         bottom: 25,
       },
+      searchIcon: {
+        bottom: 15,
+        width: 30,
+        height: 30,
+        resizeMode: 'contain',
+        alignSelf: 'flex-end'
+
+      }
 }

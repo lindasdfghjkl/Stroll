@@ -416,7 +416,7 @@ global.queryFirebase = function queryFirebase(lat, long) {
             if (item._key == deletedNote._key) {
                 try { global.noteQueryObjs.splice(global.noteQueryObjs.indexOf(item), 1);} 
                 catch {}
-            } 
+            }
         })
 
         global.feed_items.forEach(function(item) { 
@@ -962,8 +962,7 @@ class Toolbar extends Component {
                                     </View>
                                     {this.state.fontLoaded == true ? (
                                           <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
-                                      ) : null }
-
+                                    ) : null }
                                 </View>
                             </MapView.Callout>
                         </MapView.Marker>
@@ -1093,6 +1092,21 @@ class Toolbar extends Component {
                                     onPress={() => {this.closeFeedModal(); }}
                                     style={feedModalStyle.closeIcon}
                                 />
+
+                                <TouchableHighlight
+                                    onPress={() => {
+                                        
+                                    }}
+                                >
+                                    <Image
+                                        style={feedModalStyle.searchIcon}
+                                        source={require('../../assets/icon-assets/search.png')}
+                                    />
+                                </TouchableHighlight>
+
+
+
+
                                 <ScrollView 
                                   ref={feedScrollView => {
                                     // check if this reference exists
