@@ -818,9 +818,9 @@ class Toolbar extends Component {
         if (diff >= 24) {
           diff %= 24
           if (diff > 1) {
-            return diff + "days ago"
+            return diff + " days ago"
           } else {
-            return diff + "day ago"
+            return diff + " day ago"
           }
         } else if (diff < 24 && diff > 1) {
           return Math.round(diff) + " hours ago";
