@@ -11,8 +11,8 @@ export default {
       modal: {
         width: '90%',
         minHeight: '50%',
-        maxHeight: '90%',
-        height: '70%',
+        maxHeight: '95%',
+        height: '75%',
         backgroundColor: '#1a1821',
         paddingLeft: '6%',
         paddingRight: '6%',
@@ -43,19 +43,30 @@ export default {
         borderWidth: 2,
         borderRadius: 10,
         padding: '3%',
-        marginBottom: '5%',
+        marginBottom: '2.5%',
         fontFamily: 'asap-regular',
         fontSize: 20
       },
       noteInput: {
-        minHeight: '30%',
-        height: '30%',
+        minHeight: '20%',
+        height: '45%',
         borderColor: '#6EEB93',
         color: 'white',
         borderWidth: 2,
         borderRadius: 10,
         padding: '3%',
-        marginBottom: '2%',
+        marginBottom: '2.5%',
+        fontFamily: 'asap-regular',
+        fontSize: 20
+      },
+      tagsInput: {
+        minHeight: '5%',
+        borderColor: '#6EEB93',
+        color: 'white',
+        borderWidth: 2,
+        borderRadius: 10,
+        padding: '3%',
+        marginBottom: '2.5%',
         fontFamily: 'asap-regular',
         fontSize: 20
       },
@@ -64,12 +75,12 @@ export default {
         flexDirection: 'row', 
         justifyContent: 'space-between',
         height: '3%',
-        bottom: '2%',
-        paddingTop: 0
+        bottom: '3%',
+        paddingTop: '2.5%'
       },
       postIcon: {
         width: 35,
-        height: 38,
+        height: 35,
         //margin: '3%',
       },
       selectImgIcon: {
@@ -86,13 +97,10 @@ export default {
       imgThumb: {
         left: 0,
         paddingLeft: '3%',
-        width: '15%',
-        height: '15%',
+        paddingBottom: '2.5%',
+        paddingTop: '2.5%',
+        width: 45,
+        height: 45,
         resizeMode: 'contain',
       },
-      noThumb: {
-        width: 0,
-        height: '15%',
-        resizeMode: 'contain',
-      }
 }

@@ -46,7 +46,15 @@ export default {
     textAlignVertical: 'center',
     color: '#222',
     lineHeight: 24
-
+  },
+  tags: {
+    bottom: 20,
+    fontFamily: 'asap-regular',
+    fontSize: 14,
+    textAlignVertical: 'bottom',
+    color: '#444',
+    lineHeight: 14,
+    alignSelf:'flex-end',
   },
   date: {
     position:'absolute',

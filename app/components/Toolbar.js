@@ -410,6 +410,7 @@ global.queryFirebase = function queryFirebase(lat, long) {
             location: snapshot.val().location,
             time: snapshot.val().time,
             image: child.val().image,
+            tags: child.val().tags.split(', '),
             _key: snapshot.key
         }
         console.log("Deleted note: " + deletedNote.title);
@@ -443,6 +444,7 @@ global.queryFirebase = function queryFirebase(lat, long) {
                     location: child.val().location,
                     time: child.val().time,
                     image: child.val().image,
+                    tags: child.val().tags.split(', '),
                     _key: child.key
                 };
 
@@ -486,6 +488,7 @@ class Toolbar extends Component {
             fontLoaded: false,
             titleValue: '',
             messageValue: '',
+            tagsValue: '',
             noteIsOpen: false,
             noteTitle: '',
             noteMessage: '',
@@ -495,8 +498,6 @@ class Toolbar extends Component {
             feedScrollPosition: 0,
             selectedImage: false,
             image: "",
-            noteImageExpanded: false,
-            expandedNoteImage: "",
         };
     }
 
@@ -583,6 +584,7 @@ class Toolbar extends Component {
               location: snapshot.val().location,
               time: snapshot.val().time,
               image: child.val().image,
+              tags: child.val().tags.split(', '),
               _key: snapshot.key
             }
             console.log("Deleted note: " + deletedNote.title);
@@ -633,6 +635,7 @@ class Toolbar extends Component {
                     location: child.val().location,
                     time: child.val().time,
                     image: child.val().image,
+                    tags: child.val().tags.split(', '),
                     _key: child.key
                 }
 
@@ -676,12 +679,6 @@ class Toolbar extends Component {
         this.setRegion(region);
     }
 
-    expandNoteImage(uri) {
-      this.setState({ expandedNoteImage: uri});
-      this.setState({ noteImageExpanded: true});
-      console.log("pressed thumb")
-    }
-
     setAddPinModalVisible(visible) {
         this.setState({ addPinModalVisible: visible });
     }
@@ -701,7 +698,7 @@ class Toolbar extends Component {
 
     openAddPinModal() {
         // Reset the text box to empty, and when that is done open the modal
-        this.setState({ titleValue: '', messageValue: '' }, () => this.setAddPinModalVisible(true));
+        this.setState({ titleValue: '', messageValue: '', tagsValue: '' }, () => this.setAddPinModalVisible(true));
     }
 
     openFeedModal() {
@@ -715,13 +712,18 @@ class Toolbar extends Component {
             (position) => {
                 coordinates = { latitude: position.coords.latitude, longitude: position.coords.longitude }
                 console.log(coordinates);
-                var image = "";
-                if (this.state.selectedImage == false) {
-                  image = null;
-                } else {
+
+                var image = null; 
+                if (this.state.selectedImage == true) {
                   image = this.state.image.replace("data:image/jpeg;base64,", "")
                 }
-                global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: Date.now(), image: image });
+
+                var tags = ''; 
+                if (this.state.tagsValue != '') {
+                  tags = this.state.tagsValue;
+                }
+
+                global.firebaseRef.push({ title: this.state.titleValue, message: this.state.messageValue, location: coordinates, time: Date.now(), image: image, tags: tags });
                 this.closeAddPinModal();
 
             },
@@ -756,13 +758,13 @@ class Toolbar extends Component {
           var uploadStr = pickerResult.base64;
           this.setState({ image: "data:image/jpeg;base64," + uploadStr });
           this.setState({ selectedImage: true });
-          console.log("image uri: " + this.state.image)
+          //console.log("image uri: " + this.state.image)
         }  else {
           this.setState({ selectedImage: false });
         }
       } catch (e) {
         console.log(e);
-        alert('Upload failed, sorry :(');
+        alert('Upload failed.');
       }
     };
 
@@ -809,6 +811,8 @@ class Toolbar extends Component {
         var diff = (dt2 - dt1) / 1000;
         diff /= (60 * 60);
 
+
+
         if (diff < 1) {
           return Math.round(diff * 60) + " minutes ago";
         } else {
@@ -819,11 +823,11 @@ class Toolbar extends Component {
           diff %= 24
           if (diff > 1) {
             return diff + " days ago"
-          } else {
-            return diff + " day ago"
+          } else if (diff == 1 || diff == 0) {
+            return 1 + " day ago"
           }
-        } else if (diff < 24 && diff > 1) {
-          return Math.round(diff) + " hours ago";
+        } else if (diff > 1 && diff < 24) {
+          return diff + " hours ago";
         } 
     }
 
@@ -919,22 +923,28 @@ class Toolbar extends Component {
                                 
                                 <View style={mapCalloutStyle.container}>
                                     <View style={mapCalloutStyle.bubble}>
-                                        <View style={mapCalloutStyle.amount}>
-                                            {this.props.children}
-                                            
-                                            {this.state.fontLoaded == true ? (
-                                                <Text style={this.getCalloutColorStyle(item.time)}>{item.title}</Text>
-                                            ) : null }
-                                            {this.state.fontLoaded == true ? (
-                                                <Text style={mapCalloutStyle.message}>{item.message}</Text>
-                                            ) : null }
-                                        </View>
-                                    </View>    
+                                          <View style={mapCalloutStyle.amount}>
+                                              {this.props.children}
+                                              
+                                              {this.state.fontLoaded == true ? (
+                                                  <Text style={this.getCalloutColorStyle(item.time)}>{item.title}</Text>
+                                              ) : null }
+                                              {this.state.fontLoaded == true ? (
+                                                  <Text style={mapCalloutStyle.message}>{item.message}</Text>
+                                              ) : null }
+                                          </View>
+                                      </View>    
                                     <View style={mapCalloutStyle.arrowBorder} />
-                                    <View style={mapCalloutStyle.arrow} />
-                                        {this.state.fontLoaded == true ? (
-                                            <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
-                                        ) : null }
+                                    <View style={mapCalloutStyle.arrow}>                    
+                                    </View>
+
+                                    {this.state.fontLoaded == true && item.tags != '' 
+                                      ? <Text style={mapCalloutStyle.tags}>{"Tags: " + item.tags}</Text>
+                                      : null }
+                                    
+                                    {this.state.fontLoaded == true ? (
+                                        <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
+                                    ) : null }
                                 </View>
                             </MapView.Callout>
                         </MapView.Marker>
@@ -995,12 +1005,26 @@ class Toolbar extends Component {
                                 keyboardAppearance={'dark'}
                                 keyboardDismissMode={'onDrag'}
                             />
+                            <TextInput
+                                style={addPinModalStyle.tagsInput}
+                                placeholder={'Tags (optional)'}
+                                placeholderTextColor='white'
+                                onChangeText={(text) => { this.setState({ tagsValue: text})}}
+                                onEndEditing={(e) => {
+                                  this.setState({ tagsValue: e.nativeEvent.text})
+                                }}
+                                onSubmitEditing={Keyboard.dismiss}
+                                value={this.state.tagsValue.replace(/ /g, ", ").replace(/,, /g, ", ")}
+                                multiline={false}
+                                keyboardAppearance={'dark'}
+                                maxLength={55} // maximum charachters
+                            />
 
                             {/* image thumbnail */}
                             {this.state.selectedImage ? 
                                   <Image source={{ uri: this.state.image }} style={addPinModalStyle.imgThumb} /> 
                                   : 
-                                  <Image source={require('../../assets/icon-assets/clearThumb.png')}  style={addPinModalStyle.noThumb}/> 
+                                  <Image source={require('../../assets/icon-assets/clearThumb.png')}  style={addPinModalStyle.imgThumb}/> 
                             }
 
                             {/* upload buttons */}
@@ -1070,7 +1094,7 @@ class Toolbar extends Component {
                                   }}
                                   scrollEventThrottle={16}
                                 >
-                                
+
                                     {global.feed_items.map((item) => {
                                             return (
                                                <View style={{flex: 1}} key={item._key}>
@@ -1088,6 +1112,16 @@ class Toolbar extends Component {
                                                                     {item.title}
                                                                 </Text> 
                                                                 ) : null }
+
+                                                                <View style={feedModalStyle.tagsView}>
+                                                                {this.state.fontLoaded == true && item.tags.length >= 1 && item.tags[0] != '' ? 
+                                                                 item.tags.map((tag) => {
+                                                                   return  (<Text key={item.tags.indexOf(tag) + Math.random(100000)} style={feedModalStyle.tag}>{tag}</Text> )
+                                                                 })
+                                                                 : null }
+                                                                 </View>
+                                                                
+                                                                 
 
                                                                 {this.state.fontLoaded == true ? (
                                                                 <Text style={feedModalStyle.timestamp}>
@@ -1117,7 +1151,7 @@ class Toolbar extends Component {
 
             
 
-               { /* Main Toolbar with two icons */}
+               { /* Main Toolbar with nav icons */}
                 <View style={toolbarStyle.navbar}>
                     <TouchableHighlight
                         onPress={() => {

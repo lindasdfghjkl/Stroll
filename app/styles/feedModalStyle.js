@@ -67,9 +67,25 @@ export default {
         fontSize: 14,
         fontFamily: 'asap-regular',
         textAlignVertical: 'center',
-        //alignSelf: 'flex-end',
         height: 20,
         bottom: 25,
-
+      },
+      tagsView: {
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+      },
+      tag: {
+        flexDirection: 'column',
+        marginRight: 10,
+        padding: 5,
+        color: '#EFEFF4',
+        backgroundColor: '#888',
+        fontSize: 14,
+        fontFamily: 'asap-regular',
+        textAlignVertical: 'center',
+        height: 15,
+        bottom: 50,
       },
 }
