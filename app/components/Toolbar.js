@@ -448,6 +448,13 @@ global.queryFirebase = function queryFirebase(lat, long) {
                     _key: child.key
                 };
 
+                //remove the last comma if necessary
+                var lastTag = obj.tags[obj.tags.length-1];
+                if (lastTag.substring(lastTag.length-1) == ",") {
+                  lastTag = lastTag.substring(0, lastTag.length-1);
+                  obj.tags[obj.tags.length - 1] = lastTag;
+                }
+
                 global.noteQueryObjs.push(obj);
             }
         });
@@ -499,6 +506,8 @@ class Toolbar extends Component {
             selectedImage: false,
             image: "",
         };
+
+        this.colors = ['#4ae779', '#ff5dbb', '#6686ff']
     }
 
     setRegion(region) {
@@ -637,6 +646,13 @@ class Toolbar extends Component {
                     image: child.val().image,
                     tags: child.val().tags.split(', '),
                     _key: child.key
+                }
+
+                //remove the last comma if necessary
+                var lastTag = noteObj.tags[noteObj.tags.length-1];
+                if (lastTag.substring(lastTag.length-1) == ",") {
+                  lastTag = lastTag.substring(0, lastTag.length-1);
+                  noteObj.tags[noteObj.tags.length - 1] = lastTag;
                 }
 
                 if (global.marker_items.length < childrenCount) {
@@ -937,11 +953,19 @@ class Toolbar extends Component {
                                     <View style={mapCalloutStyle.arrowBorder} />
                                     <View style={mapCalloutStyle.arrow}>                    
                                     </View>
-
-                                    {this.state.fontLoaded == true && item.tags != '' 
-                                      ? <Text style={mapCalloutStyle.tags}>{"Tags: " + item.tags}</Text>
-                                      : null }
                                     
+                                    <View style={mapCalloutStyle.tagsView}>
+                                    {this.state.fontLoaded == true && item.tags.length >= 1 && item.tags[0] != '' ? 
+                                      item.tags.map((tag) => {
+                                        return  (<Text key={item.tags.indexOf(tag) + Math.random(100000)} 
+                                                        // cycle through colors for tag bg
+                                                        style={[mapCalloutStyle.tag, {backgroundColor: this.colors[item.tags.indexOf(tag) % this.colors.length]}]}> 
+                                                        {tag}
+                                                  </Text>
+                                        )})
+                                      : null }
+                                      </View>
+        
                                     {this.state.fontLoaded == true ? (
                                         <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
                                     ) : null }
@@ -989,7 +1013,7 @@ class Toolbar extends Component {
                                 value={this.state.titleValue}
                                 multiline={false}
                                 keyboardAppearance={'dark'}
-                                maxLength={55} // maximum charachters
+                                maxLength={33} // maximum charachters
                             />
                             <TextInput
                                 style={addPinModalStyle.noteInput}
@@ -1116,13 +1140,15 @@ class Toolbar extends Component {
                                                                 <View style={feedModalStyle.tagsView}>
                                                                 {this.state.fontLoaded == true && item.tags.length >= 1 && item.tags[0] != '' ? 
                                                                  item.tags.map((tag) => {
-                                                                   return  (<Text key={item.tags.indexOf(tag) + Math.random(100000)} style={feedModalStyle.tag}>{tag}</Text> )
-                                                                 })
+                                                                   return  (<Text key={item.tags.indexOf(tag) + Math.random(100000)} 
+                                                                                  // cycle through colors for tag bg
+                                                                                  style={[feedModalStyle.tag, {backgroundColor: this.colors[item.tags.indexOf(tag) % this.colors.length]}]}> 
+                                                                                    {tag}
+                                                                            </Text>
+                                                                 )})
                                                                  : null }
                                                                  </View>
                                                                 
-                                                                 
-
                                                                 {this.state.fontLoaded == true ? (
                                                                 <Text style={feedModalStyle.timestamp}>
                                                                     {this.calculateHours(Date.now(), item.time)}

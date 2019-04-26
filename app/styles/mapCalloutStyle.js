@@ -47,14 +47,23 @@ export default {
     color: '#222',
     lineHeight: 24
   },
-  tags: {
+  tagsView: {
+    flex: 1,
+    flexDirection: 'row',
     bottom: 20,
-    fontFamily: 'asap-regular',
-    fontSize: 14,
-    textAlignVertical: 'bottom',
-    color: '#444',
-    lineHeight: 14,
     alignSelf:'flex-end',
+  },
+  tag: {
+    overflow: 'hidden',
+    flexDirection: 'column',
+    marginLeft: 10,
+    padding: 4,
+    color: 'white',
+    fontSize: 14,
+    fontFamily: 'asap-regular',
+    textAlignVertical: 'center',
+    height: 20,
+    borderRadius: 3,
   },
   date: {
     position:'absolute',
