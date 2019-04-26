@@ -13,27 +13,11 @@ export default {
     paddingVertical: 10,
     borderColor: '#fefefe',
     borderWidth: 0.5,
-
   },
   amount: {
     flex: 1,
   },
-  arrow: {
-    backgroundColor: '#fefefe',
-    borderWidth: 16,
-    borderColor: '#fefefe',
-    borderTopColor: '#fefefe',
-    alignSelf: 'center',
-    marginTop: -32,
-  },
-  arrowBorder: {
-    backgroundColor: '#fefefe',
-    borderWidth: 16,
-    borderColor: '#fefefe',
-    borderTopColor: '#fefefe',
-    alignSelf: 'center',
-    marginTop: -0.5,
-  },
+
   title: {
     fontFamily: 'asap-bold',
     fontSize: 24,
@@ -45,12 +29,13 @@ export default {
     fontSize: 20,
     textAlignVertical: 'center',
     color: '#222',
-    lineHeight: 24
+    lineHeight: 24,
+    paddingBottom: 10
   },
   tagsView: {
     flex: 1,
     flexDirection: 'row',
-    bottom: 20,
+    bottom: 15,
     alignSelf:'flex-end',
   },
   tag: {
@@ -66,12 +51,18 @@ export default {
     borderRadius: 3,
   },
   date: {
-    position:'absolute',
-    bottom:5,
+    bottom: 5,
     alignSelf:'flex-end',
     fontFamily: 'asap-regular',
     fontSize: 14,
     textAlignVertical: 'center',
     color: '#444'
+  },
+  report: {
+    bottom:0,
+    left: 0,
+    height: 20,
+    width: 20,
+    resizeMode: 'contain'
   }
 }

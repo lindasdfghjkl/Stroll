@@ -1,29 +1,26 @@
 'use strict';
 import React, {Component} from 'react';
 import {
-    ReactNative, 
     Modal, 
     View, 
     Text, 
     TouchableHighlight,
-    TouchableOpacity,
     TextInput,
     Keyboard,
     KeyboardAvoidingView,
     ScrollView,
     Image,
-    StyleSheet,
   } from 'react-native';
 import MapView from 'react-native-maps';
-import Marker from 'react-native-maps';
-import { Callout } from 'react-native-maps';
+//import Marker from 'react-native-maps';
+//import { Callout } from 'react-native-maps';
 
 import { Ionicons } from '@expo/vector-icons';
-import { Header, Content, Card, CardItem, Body, Left, Right } from 'native-base';
-import {Expo, Font, TaskManager, Location} from 'expo';
+import { Card, CardItem, Body } from 'native-base';
+import {Font, TaskManager, Location} from 'expo';
 import { ImagePicker, Permissions } from 'expo';
 
-// Styles
+// Styles and icons
 import toolbarStyle from '../styles/toolbarStyle';
 import addPinModalStyle from '../styles/addPinModalStyle';
 import feedModalStyle from '../styles/feedModalStyle';
@@ -830,7 +827,7 @@ class Toolbar extends Component {
 
 
         if (diff < 1) {
-          return Math.round(diff * 60) + " minutes ago";
+          return Math.round(diff * 60) + " min ago";
         } else {
           diff = Math.round(diff);
         }
@@ -840,11 +837,13 @@ class Toolbar extends Component {
           if (diff > 1) {
             return diff + " days ago"
           } else if (diff == 1 || diff == 0) {
-            return 1 + " day ago"
+            return "1 day ago"
           }
         } else if (diff > 1 && diff < 24) {
           return diff + " hours ago";
-        } 
+        } else if(diff == 1) {
+          return "1 hour ago";
+        }
     }
 
 
@@ -949,11 +948,7 @@ class Toolbar extends Component {
                                                   <Text style={mapCalloutStyle.message}>{item.message}</Text>
                                               ) : null }
                                           </View>
-                                      </View>    
-                                    <View style={mapCalloutStyle.arrowBorder} />
-                                    <View style={mapCalloutStyle.arrow}>                    
-                                    </View>
-                                    
+                                    </View>             
                                     <View style={mapCalloutStyle.tagsView}>
                                     {this.state.fontLoaded == true && item.tags.length >= 1 && item.tags[0] != '' ? 
                                       item.tags.map((tag) => {
@@ -964,7 +959,7 @@ class Toolbar extends Component {
                                                   </Text>
                                         )})
                                       : null }
-                                      </View>
+                                    </View>
         
                                     {this.state.fontLoaded == true ? (
                                         <Text style={mapCalloutStyle.date}>{this.formatDate(item.time)}</Text>
@@ -1007,8 +1002,7 @@ class Toolbar extends Component {
                                 onChangeText={(text) => this.setState({ titleValue: text })}
                                 onEndEditing={(e) => {
                                     this.setState({ titleValue: e.nativeEvent.text })
-                                }
-                                }
+                                }}
                                 onSubmitEditing={Keyboard.dismiss}
                                 value={this.state.titleValue}
                                 multiline={false}
@@ -1138,15 +1132,17 @@ class Toolbar extends Component {
                                                                 ) : null }
 
                                                                 <View style={feedModalStyle.tagsView}>
-                                                                {this.state.fontLoaded == true && item.tags.length >= 1 && item.tags[0] != '' ? 
-                                                                 item.tags.map((tag) => {
-                                                                   return  (<Text key={item.tags.indexOf(tag) + Math.random(100000)} 
-                                                                                  // cycle through colors for tag bg
-                                                                                  style={[feedModalStyle.tag, {backgroundColor: this.colors[item.tags.indexOf(tag) % this.colors.length]}]}> 
-                                                                                    {tag}
-                                                                            </Text>
-                                                                 )})
-                                                                 : null }
+                                                                  {this.state.fontLoaded == true && item.tags.length >= 1 && item.tags[0] != '' ? 
+                                                                  item.tags.map((tag) => {
+                                                                    return  (
+                                                                      <Text key={item.tags.indexOf(tag) + Math.random(100000)} 
+                                                                            // cycle through colors for tag bg
+                                                                            style={[feedModalStyle.tag, {backgroundColor: this.colors[item.tags.indexOf(tag) % this.colors.length]}]}> 
+                                                                              {tag}
+                                                                      </Text>
+                                                                    )
+                                                                  })
+                                                                  : null }
                                                                  </View>
                                                                 
                                                                 {this.state.fontLoaded == true ? (

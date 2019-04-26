@@ -81,7 +81,7 @@ export default {
         flexDirection: 'column',
         marginRight: 10,
         padding: 4,
-        color: '#EFEFF4',
+        color: 'white',
         fontSize: 14,
         fontFamily: 'asap-regular',
         textAlignVertical: 'center',
