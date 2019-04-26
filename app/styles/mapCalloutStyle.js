@@ -41,7 +41,7 @@ export default {
   tag: {
     overflow: 'hidden',
     flexDirection: 'column',
-    marginLeft: 10,
+    marginLeft: 6,
     padding: 4,
     color: 'white',
     fontSize: 14,

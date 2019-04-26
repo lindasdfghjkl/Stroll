@@ -79,7 +79,7 @@ export default {
       tag: {
         overflow: 'hidden',
         flexDirection: 'column',
-        marginRight: 10,
+        marginRight: 6,
         padding: 4,
         color: 'white',
         fontSize: 14,
